@@ -42,6 +42,22 @@ export class CodeMeshApp {
 
   async createCapsule(repoQuery: string, task: string): Promise<string> {
     const config = await this.configManager.load();
+    const capsuleInput = await this.buildCapsuleInput(repoQuery, task);
+    const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
+
+    return capsuleService.create(capsuleInput);
+  }
+
+  async previewCapsule(repoQuery: string, task: string): Promise<string> {
+    const config = await this.configManager.load();
+    const capsuleInput = await this.buildCapsuleInput(repoQuery, task);
+    const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
+
+    return capsuleService.preview(capsuleInput);
+  }
+
+  private async buildCapsuleInput(repoQuery: string, task: string) {
+    const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
 
@@ -58,16 +74,15 @@ export class CodeMeshApp {
 
     const knowledgeDocuments = await this.knowledgePlugin.detect(config);
     const agentProfiles = (await Promise.all(this.agentPlugins.map((plugin) => plugin.detect(config)))).flat();
-    const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
 
-    return capsuleService.create({
+    return {
       repository,
       task,
       knowledgeDocuments: knowledgeDocuments.filter((doc) => {
         return doc.projectHint === repository.name || doc.projectHint === repository.category;
       }),
       agentProfiles
-    });
+    };
   }
 
   async doctor(): Promise<string[]> {

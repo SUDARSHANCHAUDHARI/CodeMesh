@@ -72,6 +72,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "capsule" && subcommand === "preview") {
+    const repo = readFlag(rest, "--repo");
+    const task = readFlag(rest, "--task");
+    if (!repo || !task) {
+      throw new Error('Usage: codemesh capsule preview --repo <query> --task "<task>"');
+    }
+
+    console.log(await app.previewCapsule(repo, task));
+    return;
+  }
+
   if (command === "doctor") {
     const lines = await app.doctor();
     console.log(["CodeMesh doctor", ...lines].join("\n"));
@@ -99,6 +110,7 @@ Usage:
   codemesh scan vault
   codemesh repo search <query>
   codemesh capsule create --repo <query> --task "<task>"
+  codemesh capsule preview --repo <query> --task "<task>"
   codemesh doctor
 `);
 }

@@ -23,4 +23,13 @@ export class CapsuleService {
     await writeFile(capsulePath, this.renderer.render(input), "utf8");
     return capsulePath;
   }
+
+  preview(input: {
+    repository: RepositoryRecord;
+    task: string;
+    knowledgeDocuments: KnowledgeDocument[];
+    agentProfiles: AgentProfile[];
+  }): string {
+    return this.renderer.render(input);
+  }
 }

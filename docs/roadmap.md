@@ -19,6 +19,8 @@
 - Better language and framework detection
 - Git branch/status indexing for selected repos
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
+- Capsule preview command
+- Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths
 - Capsule templates
 - Project memory resolver
 

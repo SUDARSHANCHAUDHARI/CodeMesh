@@ -21,6 +21,7 @@ pnpm dev init
 pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
+pnpm dev capsule preview --repo CodeMesh --task "Plan the next task"
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task"
 pnpm dev doctor
 ```
@@ -30,6 +31,8 @@ pnpm dev doctor
 ```text
 category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
 ```
+
+`capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 
 ## Confirmed Local Paths
 

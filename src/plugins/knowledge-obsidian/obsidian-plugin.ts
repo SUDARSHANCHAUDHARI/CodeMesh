@@ -39,6 +39,27 @@ export class ObsidianPlugin implements KnowledgeSourcePlugin {
           projectHint: child.name,
           updatedAt: new Date().toISOString()
         });
+
+        if (zone !== "_Projects" && zone !== "_RepoMem") {
+          continue;
+        }
+
+        const projectPath = join(zonePath, child.name);
+        const projects = await readdir(projectPath, { withFileTypes: true }).catch(() => []);
+        for (const project of projects) {
+          if (!project.isDirectory()) {
+            continue;
+          }
+
+          documents.push({
+            id: `${zone}/${child.name}/${project.name}`,
+            source: this.name,
+            path: join(projectPath, project.name),
+            title: `${child.name}/${project.name}`,
+            projectHint: project.name,
+            updatedAt: new Date().toISOString()
+          });
+        }
       }
     }
 

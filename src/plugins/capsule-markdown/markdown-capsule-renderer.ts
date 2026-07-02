@@ -18,15 +18,29 @@ ${task}
 - Category: ${repository.category}
 - Path: ${repository.path}
 - Source: ${repository.source}
+- Language: ${repository.primaryLanguage ?? "unknown"}
+- Framework: ${repository.framework ?? "unknown"}
 - Package manager: ${repository.packageManager ?? "unknown"}
+- Branch: ${repository.currentBranch ?? "unknown"}
+- Status: ${repository.hasChanges ? `dirty (${repository.changedFileCount ?? 0} changed files)` : "clean"}
+- Last commit date: ${repository.lastCommitDate ?? "unknown"}
+- Active status: ${repository.activeStatus}
+- Last indexed: ${repository.lastSeenAt}
 
 ## Relevant Knowledge Sources
 
-${knowledgeDocuments.map((doc) => `- ${doc.title}: ${doc.path}`).join("\n") || "- None detected"}
+${knowledgeDocuments.map((doc) => `- ${doc.title} (${doc.source}): ${doc.path}`).join("\n") || "- None detected"}
 
 ## Agent Instructions
 
 ${agentProfiles.map((profile) => `- ${profile.agentType}: ${profile.instructionFilePath}`).join("\n") || "- None detected"}
+
+## Suggested Agent Context
+
+- Use the repository metadata above as the current workspace snapshot.
+- Read the listed instruction files before making changes.
+- Prefer relevant Obsidian paths listed above as references, not write targets.
+- If repository status is dirty, inspect existing changes before editing.
 
 ## Operating Rules
 
