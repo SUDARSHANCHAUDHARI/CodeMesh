@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.codemesh/config.json
+.codemesh/index.sqlite
+.codemesh/capsules/*.md
+*.log
+.DS_Store

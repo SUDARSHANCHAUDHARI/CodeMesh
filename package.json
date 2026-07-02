@@ -1,0 +1,19 @@
+{
+  "name": "codemesh",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "codemesh": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "pnpm build && node dist/cli/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/cli/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "typescript": "^5.9.3"
+  }
+}
