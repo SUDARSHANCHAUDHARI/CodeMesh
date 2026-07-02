@@ -1,5 +1,7 @@
 import type { CodeMeshConfig } from "../config/types.js";
 
+export type CapsuleTemplate = "neutral" | "codex" | "claude";
+
 export interface RepositoryRecord {
   id: string;
   name: string;
@@ -36,6 +38,7 @@ export interface AgentProfile {
 export interface ContextCapsuleInput {
   repository: RepositoryRecord;
   task: string;
+  template: CapsuleTemplate;
   knowledgeDocuments: KnowledgeDocument[];
   agentProfiles: AgentProfile[];
 }

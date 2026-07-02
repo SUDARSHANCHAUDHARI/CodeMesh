@@ -4,7 +4,7 @@ export class MarkdownCapsuleRenderer implements CapsuleRendererPlugin {
   readonly name = "capsule-markdown";
 
   render(input: ContextCapsuleInput): string {
-    const { repository, task, knowledgeDocuments, agentProfiles } = input;
+    const { repository, task, template, knowledgeDocuments, agentProfiles } = input;
 
     return `# Context Capsule: ${repository.name}
 
@@ -35,6 +35,11 @@ ${knowledgeDocuments.map((doc) => `- ${doc.title} (${doc.source}): ${doc.path}`)
 
 ${agentProfiles.map((profile) => `- ${profile.agentType}: ${profile.instructionFilePath}`).join("\n") || "- None detected"}
 
+## Capsule Template
+
+- Template: ${template}
+${renderTemplateGuidance(template)}
+
 ## Suggested Agent Context
 
 - Use the repository metadata above as the current workspace snapshot.
@@ -50,4 +55,27 @@ ${agentProfiles.map((profile) => `- ${profile.agentType}: ${profile.instructionF
 - Use this capsule as portable context for Claude Code or Codex.
 `;
   }
+}
+
+function renderTemplateGuidance(template: ContextCapsuleInput["template"]): string {
+  if (template === "codex") {
+    return `- Intended agent: Codex
+- Inspect the repository state before editing.
+- Follow AGENTS.md before project-specific assumptions.
+- Keep changes scoped to the task.
+- Run relevant verification before claiming completion.
+- Report changed files, checks run, and any remaining risk.`;
+  }
+
+  if (template === "claude") {
+    return `- Intended agent: Claude Code
+- Read CLAUDE.md before making changes.
+- Respect Obsidian vault boundaries.
+- Summarize changed files and reasoning at handoff.
+- Keep generated memory or session output out of the vault unless explicitly approved.`;
+  }
+
+  return `- Intended agent: neutral portable context
+- Use this capsule with any coding agent.
+- Adapt the task plan to the target agent's normal workflow.`;
 }

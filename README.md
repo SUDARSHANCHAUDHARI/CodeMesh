@@ -21,8 +21,8 @@ pnpm dev init
 pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
-pnpm dev capsule preview --repo CodeMesh --task "Plan the next task"
-pnpm dev capsule create --repo CodeMesh --task "Plan the next task"
+pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
+pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev doctor
 ```
 
@@ -33,6 +33,12 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 ```
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
+
+Capsule templates:
+
+- `neutral`: portable context for any coding agent
+- `codex`: adds Codex-focused inspection, AGENTS.md, scope, and verification guidance
+- `claude`: adds Claude-focused CLAUDE.md, vault-boundary, and handoff guidance
 
 ## Confirmed Local Paths
 

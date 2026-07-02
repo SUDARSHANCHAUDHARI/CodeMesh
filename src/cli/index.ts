@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { CodeMeshApp } from "../core/app.js";
+import type { CapsuleTemplate } from "../core/plugins/types.js";
 
 const app = new CodeMeshApp();
 const args = process.argv.slice(2);
@@ -63,11 +64,12 @@ async function run(argv: string[]): Promise<void> {
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
+    const template = readTemplate(rest);
     if (!repo || !task) {
-      throw new Error('Usage: codemesh capsule create --repo <query> --task "<task>"');
+      throw new Error('Usage: codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]');
     }
 
-    const capsulePath = await app.createCapsule(repo, task);
+    const capsulePath = await app.createCapsule(repo, task, template);
     console.log(`Created capsule: ${capsulePath}`);
     return;
   }
@@ -75,11 +77,12 @@ async function run(argv: string[]): Promise<void> {
   if (command === "capsule" && subcommand === "preview") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
+    const template = readTemplate(rest);
     if (!repo || !task) {
-      throw new Error('Usage: codemesh capsule preview --repo <query> --task "<task>"');
+      throw new Error('Usage: codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]');
     }
 
-    console.log(await app.previewCapsule(repo, task));
+    console.log(await app.previewCapsule(repo, task, template));
     return;
   }
 
@@ -101,6 +104,15 @@ function readFlag(args: string[], name: string): string | undefined {
   return args[index + 1];
 }
 
+function readTemplate(args: string[]): CapsuleTemplate {
+  const value = readFlag(args, "--template") ?? "neutral";
+  if (value === "neutral" || value === "codex" || value === "claude") {
+    return value;
+  }
+
+  throw new Error("Invalid template. Use one of: neutral, codex, claude");
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -109,8 +121,8 @@ Usage:
   codemesh scan repos
   codemesh scan vault
   codemesh repo search <query>
-  codemesh capsule create --repo <query> --task "<task>"
-  codemesh capsule preview --repo <query> --task "<task>"
+  codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
+  codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh doctor
 `);
 }

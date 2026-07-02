@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { AgentProfile, CapsuleRendererPlugin, KnowledgeDocument, RepositoryRecord } from "../plugins/types.js";
+import type { AgentProfile, CapsuleRendererPlugin, CapsuleTemplate, KnowledgeDocument, RepositoryRecord } from "../plugins/types.js";
 
 export class CapsuleService {
   constructor(
@@ -11,6 +11,7 @@ export class CapsuleService {
   async create(input: {
     repository: RepositoryRecord;
     task: string;
+    template: CapsuleTemplate;
     knowledgeDocuments: KnowledgeDocument[];
     agentProfiles: AgentProfile[];
   }): Promise<string> {
@@ -27,6 +28,7 @@ export class CapsuleService {
   preview(input: {
     repository: RepositoryRecord;
     task: string;
+    template: CapsuleTemplate;
     knowledgeDocuments: KnowledgeDocument[];
     agentProfiles: AgentProfile[];
   }): string {

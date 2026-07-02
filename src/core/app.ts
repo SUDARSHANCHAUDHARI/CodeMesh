@@ -7,6 +7,7 @@ import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
 import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-capsule-renderer.js";
 import { CapsuleService } from "./capsules/capsule-service.js";
+import type { CapsuleTemplate } from "./plugins/types.js";
 
 export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
@@ -40,23 +41,23 @@ export class CodeMeshApp {
     return store.searchRepositories(query);
   }
 
-  async createCapsule(repoQuery: string, task: string): Promise<string> {
+  async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
-    const capsuleInput = await this.buildCapsuleInput(repoQuery, task);
+    const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);
     const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
 
     return capsuleService.create(capsuleInput);
   }
 
-  async previewCapsule(repoQuery: string, task: string): Promise<string> {
+  async previewCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
-    const capsuleInput = await this.buildCapsuleInput(repoQuery, task);
+    const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);
     const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
 
     return capsuleService.preview(capsuleInput);
   }
 
-  private async buildCapsuleInput(repoQuery: string, task: string) {
+  private async buildCapsuleInput(repoQuery: string, task: string, template: CapsuleTemplate) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
@@ -78,6 +79,7 @@ export class CodeMeshApp {
     return {
       repository,
       task,
+      template,
       knowledgeDocuments: knowledgeDocuments.filter((doc) => {
         return doc.projectHint === repository.name || doc.projectHint === repository.category;
       }),

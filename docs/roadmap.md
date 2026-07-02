@@ -21,7 +21,7 @@
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
 - Capsule preview command
 - Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths
-- Capsule templates
+- Capsule templates for `neutral`, `codex`, and `claude`
 - Project memory resolver
 
 ## v0.3
