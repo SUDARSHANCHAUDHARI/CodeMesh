@@ -18,6 +18,7 @@
 
 - Better language and framework detection
 - Git branch/status indexing for selected repos
+- Search output with language, framework, package manager, branch, dirty status, and last commit date
 - Capsule templates
 - Project memory resolver
 

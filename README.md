@@ -25,6 +25,12 @@ pnpm dev capsule create --repo CodeMesh --task "Plan the next task"
 pnpm dev doctor
 ```
 
+`repo search` includes lightweight metadata:
+
+```text
+category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
+```
+
 ## Confirmed Local Paths
 
 ```text

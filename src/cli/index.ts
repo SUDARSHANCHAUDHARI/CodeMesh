@@ -45,7 +45,17 @@ async function run(argv: string[]): Promise<void> {
 
     const repositories = await app.searchRepos(query);
     for (const repo of repositories) {
-      console.log(`${repo.category}/${repo.name}\t${repo.path}`);
+      const dirty = repo.hasChanges ? `dirty:${repo.changedFileCount ?? 0}` : "clean";
+      const metadata = [
+        repo.primaryLanguage ?? "unknown",
+        repo.framework ?? "unknown",
+        repo.packageManager ?? "unknown",
+        repo.currentBranch ?? "no-branch",
+        dirty,
+        repo.lastCommitDate?.slice(0, 10) ?? "no-commit"
+      ].join(" | ");
+
+      console.log(`${repo.category}/${repo.name}\t${metadata}\t${repo.path}`);
     }
     return;
   }

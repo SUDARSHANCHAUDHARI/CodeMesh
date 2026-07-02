@@ -18,10 +18,18 @@ export class SqliteStore {
         primary_language TEXT,
         framework TEXT,
         package_manager TEXT,
+        current_branch TEXT,
+        has_changes INTEGER,
+        changed_file_count INTEGER,
+        last_commit_date TEXT,
         active_status TEXT NOT NULL,
         last_seen_at TEXT NOT NULL
       );
     `);
+    await this.ensureColumn("repositories", "current_branch", "TEXT");
+    await this.ensureColumn("repositories", "has_changes", "INTEGER");
+    await this.ensureColumn("repositories", "changed_file_count", "INTEGER");
+    await this.ensureColumn("repositories", "last_commit_date", "TEXT");
   }
 
   async saveRepositories(repositories: RepositoryRecord[]): Promise<void> {
@@ -39,6 +47,10 @@ export class SqliteStore {
         repo.primaryLanguage ?? null,
         repo.framework ?? null,
         repo.packageManager ?? null,
+        repo.currentBranch ?? null,
+        repo.hasChanges === undefined ? null : String(Number(repo.hasChanges)),
+        repo.changedFileCount === undefined ? null : String(repo.changedFileCount),
+        repo.lastCommitDate ?? null,
         repo.activeStatus,
         repo.lastSeenAt
       ].map(toSqlValue).join(", ")})`;
@@ -54,6 +66,10 @@ export class SqliteStore {
         primary_language,
         framework,
         package_manager,
+        current_branch,
+        has_changes,
+        changed_file_count,
+        last_commit_date,
         active_status,
         last_seen_at
       ) VALUES ${values.join(",\n")};
@@ -63,11 +79,13 @@ export class SqliteStore {
   async searchRepositories(query: string): Promise<RepositoryRecord[]> {
     const like = `%${query.toLowerCase()}%`;
     const rows = await this.query(`
-      SELECT id, name, path, category, source, primary_language, framework, package_manager, active_status, last_seen_at
+      SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
       FROM repositories
       WHERE lower(name) LIKE ${toSqlValue(like)}
          OR lower(category) LIKE ${toSqlValue(like)}
          OR lower(path) LIKE ${toSqlValue(like)}
+         OR lower(coalesce(primary_language, '')) LIKE ${toSqlValue(like)}
+         OR lower(coalesce(framework, '')) LIKE ${toSqlValue(like)}
       ORDER BY category, name
       LIMIT 50;
     `);
@@ -81,8 +99,12 @@ export class SqliteStore {
       primaryLanguage: row[5] || undefined,
       framework: row[6] || undefined,
       packageManager: row[7] || undefined,
-      activeStatus: (row[8] as RepositoryRecord["activeStatus"]) || "unknown",
-      lastSeenAt: row[9] ?? ""
+      currentBranch: row[8] || undefined,
+      hasChanges: row[9] === "" ? undefined : row[9] === "1",
+      changedFileCount: row[10] === "" ? undefined : Number(row[10]),
+      lastCommitDate: row[11] || undefined,
+      activeStatus: (row[12] as RepositoryRecord["activeStatus"]) || "unknown",
+      lastSeenAt: row[13] ?? ""
     }));
   }
 
@@ -97,6 +119,14 @@ export class SqliteStore {
       .split("\n")
       .filter(Boolean)
       .map((line) => line.split("\t"));
+  }
+
+  private async ensureColumn(tableName: string, columnName: string, columnType: string): Promise<void> {
+    const columns = await this.query(`PRAGMA table_info(${tableName});`);
+    const hasColumn = columns.some((column) => column[1] === columnName);
+    if (!hasColumn) {
+      await this.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType};`);
+    }
   }
 }
 

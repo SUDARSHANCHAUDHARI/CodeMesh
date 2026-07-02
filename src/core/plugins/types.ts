@@ -9,6 +9,10 @@ export interface RepositoryRecord {
   primaryLanguage?: string;
   framework?: string;
   packageManager?: string;
+  currentBranch?: string;
+  hasChanges?: boolean;
+  changedFileCount?: number;
+  lastCommitDate?: string;
   activeStatus: "active" | "archived" | "unknown";
   lastSeenAt: string;
 }
