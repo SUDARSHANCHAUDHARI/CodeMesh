@@ -199,11 +199,13 @@ export class CodeMeshApp {
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
     const dashboardService = new DashboardService(config.codemeshRepoPath);
+    const usageService = new UsageService(config.codemeshRepoPath);
     return dashboardService.generate({
       summary: await store.repositorySummary(),
       repositories: await store.listRepositories(),
       duplicateRepositories: await store.listDuplicateRepositories(20),
       sourceComparison: await store.compareRepositorySources("repo-local", "repo-github", 10),
+      usageSummary: await usageService.summary(7),
       plugins: this.pluginRegistry.list()
     });
   }
@@ -253,6 +255,15 @@ export class CodeMeshApp {
     const reportService = new ReportService(config.codemeshRepoPath);
     return reportService.generateRepositoryComparison({
       comparison: await store.compareRepositorySources(leftSource, rightSource, limit)
+    });
+  }
+
+  async generateUsageSummaryReport(days?: number): Promise<string> {
+    const config = await this.configManager.load();
+    const usageService = new UsageService(config.codemeshRepoPath);
+    const reportService = new ReportService(config.codemeshRepoPath);
+    return reportService.generateUsageSummary({
+      summary: await usageService.summary(days)
     });
   }
 

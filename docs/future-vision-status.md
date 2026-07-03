@@ -17,12 +17,12 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 - Release notes and changelog generation from local Git commits
 - Local project, decision, architecture, prompt, and summary memory
 - Local AI usage tracking
+- Usage reports and dashboard metrics
 
 ## Planned
 
 - Dedicated remote repository providers for GitLab and Bitbucket
 - Dedicated Notion, NotebookLM, and GitHub Wiki providers
-- Usage reports and dashboard metrics
 - Knowledge graph dashboard
 - PR summary generation from remote provider metadata
 - External plugin loading and SDK packaging

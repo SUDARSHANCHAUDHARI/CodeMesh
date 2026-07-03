@@ -317,6 +317,13 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "report" && subcommand === "usage-summary") {
+    const days = readNumberFlag(rest, "--days", 7);
+    const reportPath = await app.generateUsageSummaryReport(days);
+    console.log(`Generated report: ${reportPath}`);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -629,6 +636,7 @@ Usage:
   codemesh report changelog --repo <query> [--limit 20]
   codemesh report pr-summary --repo <query> [--limit 20]
   codemesh report repo-comparison [--left repo-local] [--right repo-github] [--limit 25]
+  codemesh report usage-summary [--days 7]
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

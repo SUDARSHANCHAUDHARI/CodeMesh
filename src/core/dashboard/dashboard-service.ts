@@ -6,6 +6,7 @@ import type {
   RepositorySourceComparison,
   RepositorySummary
 } from "../storage/sqlite-store.js";
+import type { UsageSummary } from "../usage/usage-service.js";
 
 export class DashboardService {
   constructor(private readonly codemeshRepoPath: string) {}
@@ -15,6 +16,7 @@ export class DashboardService {
     repositories: RepositoryRecord[];
     duplicateRepositories: RepositoryDuplicate[];
     sourceComparison: RepositorySourceComparison;
+    usageSummary: UsageSummary;
     plugins: PluginManifest[];
   }): Promise<string> {
     const dashboardsDir = join(this.codemeshRepoPath, ".codemesh", "dashboards");
@@ -30,6 +32,7 @@ function renderDashboard(input: {
   repositories: RepositoryRecord[];
   duplicateRepositories: RepositoryDuplicate[];
   sourceComparison: RepositorySourceComparison;
+  usageSummary: UsageSummary;
   plugins: PluginManifest[];
 }): string {
   const generatedAt = new Date().toISOString();
@@ -135,6 +138,7 @@ function renderDashboard(input: {
       ${metric("Likely matches", input.sourceComparison.likelyMatchTotal)}
       ${metric("Local only", input.sourceComparison.leftOnlyTotal)}
       ${metric("GitHub only", input.sourceComparison.rightOnlyTotal)}
+      ${metric("Usage events", input.usageSummary.totalEvents)}
       ${metric("Active plugins", activePlugins)}
       ${metric("Planned plugins", plannedPlugins)}
     </div>
@@ -145,6 +149,7 @@ function renderDashboard(input: {
       ${countSection("Repositories by framework", input.summary.byFramework)}
     </div>
     ${repoSection("Dirty repositories", dirtyRepos)}
+    ${usageSection(input.usageSummary)}
     ${sourceComparisonSection(input.sourceComparison)}
     ${duplicateSection(input.duplicateRepositories)}
     ${repoSection("Recent repositories", recentRepos)}
@@ -185,6 +190,24 @@ function repoSection(title: string, repositories: RepositoryRecord[]): string {
             <td>${escapeHtml(repo.lastCommitDate?.slice(0, 10) ?? "unknown")}</td>
           </tr>`;
         }).join("")}
+      </tbody>
+    </table>
+  </section>`;
+}
+
+function usageSection(summary: UsageSummary): string {
+  return `<section>
+    <h2>AI usage (${summary.days} days)</h2>
+    <table>
+      <thead><tr><th>Agent</th><th>Events</th><th>Tokens in</th><th>Tokens out</th><th>Cost</th></tr></thead>
+      <tbody>
+        ${summary.byAgent.map((row) => `<tr>
+          <td>${escapeHtml(row.agent)}</td>
+          <td>${row.events}</td>
+          <td>${row.tokensIn}</td>
+          <td>${row.tokensOut}</td>
+          <td>${row.costUsd.toFixed(4)}</td>
+        </tr>`).join("") || "<tr><td colspan=\"5\">No usage events recorded.</td></tr>"}
       </tbody>
     </table>
   </section>`;

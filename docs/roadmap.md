@@ -61,6 +61,8 @@
 - Repository source comparison report generator
 - Local project/decision/architecture/prompt/summary memory commands
 - Local AI usage tracking commands
+- Usage summary report generator
+- Dashboard usage metrics
 - Local multi-agent instruction detector
 - Local Markdown knowledge provider
 - Capsule history browser

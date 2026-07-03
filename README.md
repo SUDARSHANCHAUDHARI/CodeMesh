@@ -61,6 +61,7 @@ pnpm dev report release-notes --repo CodeMesh
 pnpm dev report changelog --repo CodeMesh
 pnpm dev report pr-summary --repo CodeMesh
 pnpm dev report repo-comparison
+pnpm dev report usage-summary --days 7
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -130,7 +131,7 @@ Use `repo compare --json` for scripts, reports, or future automation.
 
 `scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
 
-`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, likely matches, provider overlap, recent repos, dirty repos, and plugin status.
+`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, likely matches, usage metrics, provider overlap, recent repos, dirty repos, and plugin status.
 
 `report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
 
@@ -139,6 +140,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `report pr-summary` generates local Markdown from GitHub pull requests using the authenticated `gh` CLI.
 
 `report repo-comparison` saves the local/GitHub comparison, likely matches, and unresolved-only repositories as Markdown.
+
+`report usage-summary` saves local AI usage totals and per-agent usage as Markdown.
 
 Capsule templates:
 

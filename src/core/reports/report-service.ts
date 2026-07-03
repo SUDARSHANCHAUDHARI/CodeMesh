@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { join } from "node:path";
 import type { PluginManifest, RepositoryRecord } from "../plugins/types.js";
 import type { RepositorySourceComparison, RepositorySummary } from "../storage/sqlite-store.js";
+import type { UsageSummary } from "../usage/usage-service.js";
 
 export type ReportKind = "daily" | "weekly" | "release-notes" | "changelog";
 
@@ -63,6 +64,17 @@ export class ReportService {
     const date = new Date().toISOString().slice(0, 10);
     const reportPath = join(reportsDir, `${date}-repo-comparison.md`);
     await writeFile(reportPath, renderRepositoryComparison(input.comparison), "utf8");
+    return reportPath;
+  }
+
+  async generateUsageSummary(input: {
+    summary: UsageSummary;
+  }): Promise<string> {
+    const reportsDir = join(this.codemeshRepoPath, ".codemesh", "reports");
+    await mkdir(reportsDir, { recursive: true });
+    const date = new Date().toISOString().slice(0, 10);
+    const reportPath = join(reportsDir, `${date}-usage-summary.md`);
+    await writeFile(reportPath, renderUsageSummary(input.summary), "utf8");
     return reportPath;
   }
 }
@@ -239,6 +251,28 @@ ${comparisonRepoRows(comparison.rightOnly)}
 
 function comparisonRepoRows(repositories: RepositoryRecord[]): string {
   return repositories.map((repo) => `- ${repo.category}/${repo.name} (${repo.path})`).join("\n") || "- None";
+}
+
+function renderUsageSummary(summary: UsageSummary): string {
+  return `# AI Usage Summary
+
+Generated: ${new Date().toISOString()}
+
+Window: ${summary.days} days
+
+## Totals
+
+- Events: ${summary.totalEvents}
+- Tokens in: ${summary.totalTokensIn}
+- Tokens out: ${summary.totalTokensOut}
+- Cost USD: ${summary.totalCostUsd.toFixed(4)}
+
+## By Agent
+
+${summary.byAgent.map((row) => {
+  return `- ${row.agent}: ${row.events} events, ${row.tokensIn} in, ${row.tokensOut} out, $${row.costUsd.toFixed(4)}`;
+}).join("\n") || "- None"}
+`;
 }
 
 function githubSlug(repository: RepositoryRecord, fallbackOwner: string): string {
