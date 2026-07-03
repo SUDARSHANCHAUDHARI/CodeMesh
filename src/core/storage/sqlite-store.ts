@@ -90,22 +90,19 @@ export class SqliteStore {
       LIMIT 50;
     `);
 
-    return rows.map((row) => ({
-      id: row[0] ?? "",
-      name: row[1] ?? "",
-      path: row[2] ?? "",
-      category: row[3] ?? "",
-      source: row[4] ?? "",
-      primaryLanguage: row[5] || undefined,
-      framework: row[6] || undefined,
-      packageManager: row[7] || undefined,
-      currentBranch: row[8] || undefined,
-      hasChanges: row[9] === "" ? undefined : row[9] === "1",
-      changedFileCount: row[10] === "" ? undefined : Number(row[10]),
-      lastCommitDate: row[11] || undefined,
-      activeStatus: (row[12] as RepositoryRecord["activeStatus"]) || "unknown",
-      lastSeenAt: row[13] ?? ""
-    }));
+    return rows.map(rowToRepositoryRecord);
+  }
+
+  async listDirtyRepositories(): Promise<RepositoryRecord[]> {
+    const rows = await this.query(`
+      SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
+      FROM repositories
+      WHERE has_changes = 1
+      ORDER BY changed_file_count DESC, category, name
+      LIMIT 100;
+    `);
+
+    return rows.map(rowToRepositoryRecord);
   }
 
   async exec(sql: string): Promise<void> {
@@ -128,6 +125,25 @@ export class SqliteStore {
       await this.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType};`);
     }
   }
+}
+
+function rowToRepositoryRecord(row: string[]): RepositoryRecord {
+  return {
+    id: row[0] ?? "",
+    name: row[1] ?? "",
+    path: row[2] ?? "",
+    category: row[3] ?? "",
+    source: row[4] ?? "",
+    primaryLanguage: row[5] || undefined,
+    framework: row[6] || undefined,
+    packageManager: row[7] || undefined,
+    currentBranch: row[8] || undefined,
+    hasChanges: row[9] === "" ? undefined : row[9] === "1",
+    changedFileCount: row[10] === "" ? undefined : Number(row[10]),
+    lastCommitDate: row[11] || undefined,
+    activeStatus: (row[12] as RepositoryRecord["activeStatus"]) || "unknown",
+    lastSeenAt: row[13] ?? ""
+  };
 }
 
 function toSqlValue(value: string | null): string {

@@ -85,6 +85,14 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "dirty") {
+    const repositories = await app.dirtyRepos();
+    for (const repo of repositories) {
+      console.log(`${repo.changedFileCount ?? 0}\t${repo.category}/${repo.name}\t${repo.currentBranch ?? "no-branch"}\t${repo.path}`);
+    }
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -164,6 +172,7 @@ Usage:
   codemesh scan vault
   codemesh repo search <query>
   codemesh repo show <query>
+  codemesh repo dirty
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

@@ -22,6 +22,7 @@ pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
 pnpm dev repo show CodeMesh
+pnpm dev repo dirty
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -36,6 +37,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 ```
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
+
+`repo dirty` lists indexed repositories with local changes, sorted by changed file count.
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 
