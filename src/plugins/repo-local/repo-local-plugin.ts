@@ -18,6 +18,16 @@ export class RepoLocalPlugin implements RepositorySourcePlugin {
       }
 
       const categoryPath = join(config.repoCategoriesRoot, category.name);
+      if (await exists(join(categoryPath, ".git"))) {
+        repositories.push(await buildRepositoryRecord({
+          category: "Root",
+          name: category.name,
+          path: categoryPath,
+          source: this.name,
+          now
+        }));
+      }
+
       const children = await readdir(categoryPath, { withFileTypes: true }).catch(() => []);
 
       for (const child of children) {
@@ -30,24 +40,40 @@ export class RepoLocalPlugin implements RepositorySourcePlugin {
           continue;
         }
 
-        repositories.push({
-          id: `${category.name}/${child.name}`,
+        repositories.push(await buildRepositoryRecord({
+          category: category.name,
           name: child.name,
           path: repoPath,
-          category: category.name,
           source: this.name,
-          primaryLanguage: await detectPrimaryLanguage(repoPath),
-          framework: await detectFramework(repoPath),
-          packageManager: await detectPackageManager(repoPath),
-          ...(await detectGitMetadata(repoPath)),
-          activeStatus: "unknown",
-          lastSeenAt: now
-        });
+          now
+        }));
       }
     }
 
     return repositories.sort((a, b) => a.id.localeCompare(b.id));
   }
+}
+
+async function buildRepositoryRecord(input: {
+  category: string;
+  name: string;
+  path: string;
+  source: string;
+  now: string;
+}): Promise<RepositoryRecord> {
+  return {
+    id: `${input.category}/${input.name}`,
+    name: input.name,
+    path: input.path,
+    category: input.category,
+    source: input.source,
+    primaryLanguage: await detectPrimaryLanguage(input.path),
+    framework: await detectFramework(input.path),
+    packageManager: await detectPackageManager(input.path),
+    ...(await detectGitMetadata(input.path)),
+    activeStatus: "unknown",
+    lastSeenAt: input.now
+  };
 }
 
 async function exists(path: string): Promise<boolean> {

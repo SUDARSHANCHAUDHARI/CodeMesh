@@ -6,6 +6,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 
 - Single TypeScript CLI app
 - Category-based local repository discovery
+- Top-level repo discovery under the repo category root
 - SQLite index stored at `.codemesh/index.sqlite`
 - Read-only Obsidian structure detection
 - Claude/Codex instruction detection

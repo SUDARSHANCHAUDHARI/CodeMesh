@@ -18,6 +18,7 @@
 
 - Better language and framework detection
 - Git branch/status indexing for selected repos
+- Top-level Git repo discovery under the repo category root
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
 - Repo category command for category-scoped navigation
 - Repo language command for language-scoped navigation
