@@ -19,6 +19,7 @@
 - Better language and framework detection
 - Git branch/status indexing for selected repos
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
+- Repo category command for category-scoped navigation
 - Repo show command for full indexed metadata
 - Repo dirty command for local-change triage
 - Repo stale command for age-based project review

@@ -21,6 +21,7 @@ pnpm dev init
 pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
+pnpm dev repo category AIProjects
 pnpm dev repo show CodeMesh
 pnpm dev repo dirty
 pnpm dev repo stale --days 30
@@ -37,6 +38,8 @@ pnpm dev doctor
 ```text
 category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
 ```
+
+`repo category <name>` lists indexed repositories in an exact category, case-insensitively.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 

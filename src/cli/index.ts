@@ -45,19 +45,18 @@ async function run(argv: string[]): Promise<void> {
     }
 
     const repositories = await app.searchRepos(query);
-    for (const repo of repositories) {
-      const dirty = repo.hasChanges ? `dirty:${repo.changedFileCount ?? 0}` : "clean";
-      const metadata = [
-        repo.primaryLanguage ?? "unknown",
-        repo.framework ?? "unknown",
-        repo.packageManager ?? "unknown",
-        repo.currentBranch ?? "no-branch",
-        dirty,
-        repo.lastCommitDate?.slice(0, 10) ?? "no-commit"
-      ].join(" | ");
+    printRepositoryRows(repositories);
+    return;
+  }
 
-      console.log(`${repo.category}/${repo.name}\t${metadata}\t${repo.path}`);
+  if (command === "repo" && subcommand === "category") {
+    const category = rest.join(" ").trim();
+    if (!category) {
+      throw new Error("Usage: codemesh repo category <name>");
     }
+
+    const repositories = await app.categoryRepos(category);
+    printRepositoryRows(repositories);
     return;
   }
 
@@ -203,6 +202,22 @@ function printCountGroup(title: string, rows: Array<{ name: string; count: numbe
   }
 }
 
+function printRepositoryRows(repositories: Awaited<ReturnType<CodeMeshApp["searchRepos"]>>): void {
+  for (const repo of repositories) {
+    const dirty = repo.hasChanges ? `dirty:${repo.changedFileCount ?? 0}` : "clean";
+    const metadata = [
+      repo.primaryLanguage ?? "unknown",
+      repo.framework ?? "unknown",
+      repo.packageManager ?? "unknown",
+      repo.currentBranch ?? "no-branch",
+      dirty,
+      repo.lastCommitDate?.slice(0, 10) ?? "no-commit"
+    ].join(" | ");
+
+    console.log(`${repo.category}/${repo.name}\t${metadata}\t${repo.path}`);
+  }
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -211,6 +226,7 @@ Usage:
   codemesh scan repos
   codemesh scan vault
   codemesh repo search <query>
+  codemesh repo category <name>
   codemesh repo show <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]

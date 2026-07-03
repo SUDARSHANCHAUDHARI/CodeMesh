@@ -43,6 +43,13 @@ export class CodeMeshApp {
     return store.searchRepositories(query);
   }
 
+  async categoryRepos(category: string) {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    return store.listRepositoriesByCategory(category);
+  }
+
   async showRepo(query: string) {
     const repositories = await this.searchRepos(query);
     const repository = repositories[0];
