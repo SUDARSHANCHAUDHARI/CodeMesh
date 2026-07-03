@@ -10,6 +10,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Optional read-only GitHub repository discovery through `gh`
 - Optional read-only GitLab and Bitbucket repository discovery through environment tokens
 - Local Markdown knowledge discovery
+- Optional local imports for Notion, NotebookLM, and GitHub Wiki exports
 - Top-level repo discovery under the repo category root
 - SQLite index stored at `.codemesh/index.sqlite`
 - Read-only Obsidian structure detection
@@ -136,7 +137,13 @@ Use `repo compare --json` for scripts, reports, or future automation.
 
 `plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
 
-`scan knowledge` detects Obsidian knowledge plus local repository Markdown docs without writing to any source.
+`scan knowledge` detects Obsidian knowledge, local repository Markdown docs, and optional local imports without writing to any source.
+
+Optional import config keys:
+
+- `notionImportPath`
+- `notebookLmImportPath`
+- `githubWikiImportPath`
 
 `scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
 

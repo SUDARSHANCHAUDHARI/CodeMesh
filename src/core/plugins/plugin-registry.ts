@@ -73,16 +73,23 @@ const PLUGINS: PluginManifest[] = [
   {
     name: "knowledge-notion",
     kind: "knowledge-source",
-    status: "planned",
-    description: "Notion knowledge provider.",
-    capabilities: ["notion", "documents"]
+    status: "active",
+    description: "Optional local Notion export knowledge provider.",
+    capabilities: ["notion", "local-import", "read-only"]
   },
   {
     name: "knowledge-notebooklm",
     kind: "knowledge-source",
-    status: "planned",
-    description: "NotebookLM knowledge provider.",
-    capabilities: ["notebooklm", "documents"]
+    status: "active",
+    description: "Optional local NotebookLM export knowledge provider.",
+    capabilities: ["notebooklm", "local-import", "read-only"]
+  },
+  {
+    name: "knowledge-github-wiki",
+    kind: "knowledge-source",
+    status: "active",
+    description: "Optional local GitHub Wiki export knowledge provider.",
+    capabilities: ["github-wiki", "local-import", "read-only"]
   },
   {
     name: "agent-local",

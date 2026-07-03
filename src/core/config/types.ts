@@ -6,6 +6,9 @@ export interface CodeMeshConfig {
   gitlabBaseUrl?: string;
   gitlabGroup?: string;
   bitbucketWorkspace?: string;
+  notionImportPath?: string;
+  notebookLmImportPath?: string;
+  githubWikiImportPath?: string;
   ignoredCategoryNames: string[];
   maxGitStatusRepos: number;
 }

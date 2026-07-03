@@ -11,6 +11,7 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 - Optional read-only Bitbucket repository discovery through `BITBUCKET_TOKEN`
 - Obsidian read-only detection
 - Local Markdown documentation detection
+- Optional local Notion, NotebookLM, and GitHub Wiki export imports
 - Claude and Codex instruction detection
 - Local multi-agent instruction detection for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf
 - Context capsule preview/create/list/show
@@ -24,7 +25,7 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 
 ## Planned
 
-- Dedicated Notion, NotebookLM, and GitHub Wiki providers
+- Live Notion, NotebookLM, and GitHub Wiki sync providers
 - Richer knowledge graph visualization
 - PR summary generation from remote provider metadata
 - External plugin loading and SDK packaging

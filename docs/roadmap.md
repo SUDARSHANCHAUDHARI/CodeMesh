@@ -67,6 +67,7 @@
 - Dashboard usage metrics
 - Local knowledge graph export, summary, and search commands
 - Dashboard knowledge graph summary
+- Optional local Notion, NotebookLM, and GitHub Wiki import providers
 - Local multi-agent instruction detector
 - Local Markdown knowledge provider
 - Capsule history browser

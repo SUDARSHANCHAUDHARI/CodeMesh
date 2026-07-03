@@ -10,6 +10,7 @@ import { GitLabRepoPlugin } from "../plugins/repo-gitlab/gitlab-repo-plugin.js";
 import { BitbucketRepoPlugin } from "../plugins/repo-bitbucket/bitbucket-repo-plugin.js";
 import { ObsidianPlugin } from "../plugins/knowledge-obsidian/obsidian-plugin.js";
 import { MarkdownKnowledgePlugin } from "../plugins/knowledge-markdown/markdown-knowledge-plugin.js";
+import { LocalImportKnowledgePlugin } from "../plugins/knowledge-imports/local-import-knowledge-plugin.js";
 import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
 import { LocalAgentPlugin } from "../plugins/agent-local/agent-local-plugin.js";
@@ -37,7 +38,7 @@ export class CodeMeshApp {
   private readonly gitlabRepoPlugin = new GitLabRepoPlugin();
   private readonly bitbucketRepoPlugin = new BitbucketRepoPlugin();
   private readonly knowledgePlugin = new ObsidianPlugin();
-  private readonly knowledgePlugins = [this.knowledgePlugin, new MarkdownKnowledgePlugin()];
+  private readonly knowledgePlugins = [this.knowledgePlugin, new MarkdownKnowledgePlugin(), new LocalImportKnowledgePlugin()];
   private readonly memoryResolver = new MemoryResolver();
   private readonly pluginRegistry = new PluginRegistry();
   private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin(), new LocalAgentPlugin()];
