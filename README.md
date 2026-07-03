@@ -36,6 +36,7 @@ pnpm dev repo search CodeMesh
 pnpm dev repo category AIProjects
 pnpm dev repo language Kotlin
 pnpm dev repo framework Next.js
+pnpm dev repo source repo-github
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo dirty
@@ -67,6 +68,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo language <name>` lists indexed repositories by detected language. Use `unknown` for repos without a detected primary language.
 
 `repo framework <name>` lists indexed repositories by detected framework. Use `unknown` for repos without a detected framework.
+
+`repo source <name>` lists indexed repositories by provider, such as `repo-local` or `repo-github`.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 

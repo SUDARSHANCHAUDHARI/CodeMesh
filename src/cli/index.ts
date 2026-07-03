@@ -103,6 +103,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "source") {
+    const source = rest.join(" ").trim();
+    if (!source) {
+      throw new Error("Usage: codemesh repo source <name>");
+    }
+
+    const repositories = await app.sourceRepos(source);
+    printRepositoryRows(repositories);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -350,6 +361,7 @@ Usage:
   codemesh repo category <name>
   codemesh repo language <name>
   codemesh repo framework <name>
+  codemesh repo source <name>
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty

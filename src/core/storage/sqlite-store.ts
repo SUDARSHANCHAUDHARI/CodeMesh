@@ -150,6 +150,18 @@ export class SqliteStore {
     return rows.map(rowToRepositoryRecord);
   }
 
+  async listRepositoriesBySource(source: string): Promise<RepositoryRecord[]> {
+    const rows = await this.query(`
+      SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
+      FROM repositories
+      WHERE lower(source) = ${toSqlValue(source.toLowerCase())}
+      ORDER BY category, name
+      LIMIT 1000;
+    `);
+
+    return rows.map(rowToRepositoryRecord);
+  }
+
   async listDirtyRepositories(): Promise<RepositoryRecord[]> {
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
