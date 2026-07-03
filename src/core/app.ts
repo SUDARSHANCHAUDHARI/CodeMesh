@@ -144,6 +144,17 @@ export class CodeMeshApp {
     });
   }
 
+  async generateRepositoryReport(kind: "release-notes" | "changelog", repoQuery: string, commitLimit: number): Promise<string> {
+    const config = await this.configManager.load();
+    const repository = await this.showRepo(repoQuery);
+    const reportService = new ReportService(config.codemeshRepoPath);
+    return reportService.generateRepositoryReport({
+      kind,
+      repository,
+      commitLimit
+    });
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);

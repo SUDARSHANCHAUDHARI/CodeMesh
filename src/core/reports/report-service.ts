@@ -1,9 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { spawn } from "node:child_process";
 import { join } from "node:path";
 import type { PluginManifest, RepositoryRecord } from "../plugins/types.js";
 import type { RepositorySummary } from "../storage/sqlite-store.js";
 
-export type ReportKind = "daily" | "weekly";
+export type ReportKind = "daily" | "weekly" | "release-notes" | "changelog";
 
 export class ReportService {
   constructor(private readonly codemeshRepoPath: string) {}
@@ -20,6 +21,21 @@ export class ReportService {
     const date = new Date().toISOString().slice(0, 10);
     const reportPath = join(reportsDir, `${date}-${input.kind}.md`);
     await writeFile(reportPath, renderReport(input), "utf8");
+    return reportPath;
+  }
+
+  async generateRepositoryReport(input: {
+    kind: "release-notes" | "changelog";
+    repository: RepositoryRecord;
+    commitLimit: number;
+  }): Promise<string> {
+    const reportsDir = join(this.codemeshRepoPath, ".codemesh", "reports");
+    await mkdir(reportsDir, { recursive: true });
+    const date = new Date().toISOString().slice(0, 10);
+    const safeRepoName = input.repository.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const reportPath = join(reportsDir, `${date}-${safeRepoName}-${input.kind}.md`);
+    const commits = await recentCommits(input.repository.path, input.commitLimit);
+    await writeFile(reportPath, renderRepositoryReport(input.kind, input.repository, commits), "utf8");
     return reportPath;
   }
 }
@@ -87,4 +103,54 @@ function repoRows(repositories: RepositoryRecord[], detail: "changed files" | "l
     const value = detail === "changed files" ? String(repo.changedFileCount ?? 0) : repo.lastCommitDate?.slice(0, 10) ?? "unknown";
     return `- ${repo.category}/${repo.name}: ${value} ${detail} (${repo.path})`;
   }).join("\n");
+}
+
+function renderRepositoryReport(kind: "release-notes" | "changelog", repository: RepositoryRecord, commits: string[]): string {
+  const title = kind === "release-notes" ? "Release Notes" : "Changelog";
+  const sections = kind === "release-notes"
+    ? [
+      "## Highlights",
+      commits.map((commit) => `- ${commit}`).join("\n") || "- No commits detected",
+      "",
+      "## Verification",
+      "- Add release-specific checks before publishing."
+    ]
+    : [
+      "## Changes",
+      commits.map((commit) => `- ${commit}`).join("\n") || "- No commits detected"
+    ];
+
+  return `# ${title}: ${repository.name}
+
+Generated: ${new Date().toISOString()}
+
+Repository: ${repository.category}/${repository.name}
+Path: ${repository.path}
+Branch: ${repository.currentBranch ?? "unknown"}
+Last indexed: ${repository.lastSeenAt}
+
+${sections.join("\n")}
+`;
+}
+
+function recentCommits(repoPath: string, limit: number): Promise<string[]> {
+  return new Promise((resolve) => {
+    const child = spawn("git", ["-C", repoPath, "log", `-${Math.max(1, Math.floor(limit))}`, "--pretty=format:%h %s"], {
+      stdio: ["ignore", "pipe", "ignore"]
+    });
+
+    let stdout = "";
+    child.stdout.on("data", (chunk) => {
+      stdout += String(chunk);
+    });
+    child.on("error", () => resolve([]));
+    child.on("close", (code) => {
+      if (code !== 0) {
+        resolve([]);
+        return;
+      }
+
+      resolve(stdout.split("\n").map((line) => line.trim()).filter(Boolean));
+    });
+  });
 }

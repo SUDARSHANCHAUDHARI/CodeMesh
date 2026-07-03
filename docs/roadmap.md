@@ -41,6 +41,7 @@
 - Local dashboard
 - Static dashboard generator
 - Daily and weekly Markdown report generator
+- Release notes and changelog generator
 - Local multi-agent instruction detector
 - Local Markdown knowledge provider
 - Capsule history browser
