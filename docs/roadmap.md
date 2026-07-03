@@ -19,6 +19,7 @@
 - Better language and framework detection
 - Git branch/status indexing for selected repos
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
+- Repo show command for full indexed metadata
 - Capsule preview command
 - Capsule history list/show commands
 - Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths

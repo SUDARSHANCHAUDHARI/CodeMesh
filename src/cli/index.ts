@@ -61,6 +61,30 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "show") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      throw new Error("Usage: codemesh repo show <query>");
+    }
+
+    const repo = await app.showRepo(query);
+    const dirty = repo.hasChanges ? `dirty (${repo.changedFileCount ?? 0} changed files)` : "clean";
+    console.log([
+      `Repository: ${repo.category}/${repo.name}`,
+      `Path: ${repo.path}`,
+      `Source: ${repo.source}`,
+      `Language: ${repo.primaryLanguage ?? "unknown"}`,
+      `Framework: ${repo.framework ?? "unknown"}`,
+      `Package manager: ${repo.packageManager ?? "unknown"}`,
+      `Branch: ${repo.currentBranch ?? "unknown"}`,
+      `Status: ${dirty}`,
+      `Last commit date: ${repo.lastCommitDate ?? "unknown"}`,
+      `Active status: ${repo.activeStatus}`,
+      `Last indexed: ${repo.lastSeenAt}`
+    ].join("\n"));
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -139,6 +163,7 @@ Usage:
   codemesh scan repos
   codemesh scan vault
   codemesh repo search <query>
+  codemesh repo show <query>
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

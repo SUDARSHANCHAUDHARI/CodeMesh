@@ -21,6 +21,7 @@ pnpm dev init
 pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
+pnpm dev repo show CodeMesh
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -33,6 +34,8 @@ pnpm dev doctor
 ```text
 category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
 ```
+
+`repo show <query>` prints the full indexed metadata for the first matching repository.
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 

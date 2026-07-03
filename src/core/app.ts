@@ -43,6 +43,16 @@ export class CodeMeshApp {
     return store.searchRepositories(query);
   }
 
+  async showRepo(query: string) {
+    const repositories = await this.searchRepos(query);
+    const repository = repositories[0];
+    if (!repository) {
+      throw new Error(`No repository matched query: ${query}`);
+    }
+
+    return repository;
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);
