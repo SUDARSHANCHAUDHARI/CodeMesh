@@ -18,13 +18,14 @@ The core stays small and stable. New agents, knowledge providers, repository pro
 - `knowledge-obsidian`: detects existing Obsidian knowledge zones without editing them.
 - `agent-claude`: detects `CLAUDE.md`.
 - `agent-codex`: detects `CODEX.md` and `AGENTS.md`.
+- `agent-local`: detects local instruction files for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf.
 - `capsule-markdown`: renders capsules as Markdown.
 
 ## Planned Plugin Families
 
 - Repository sources: GitHub, GitLab, Bitbucket
 - Knowledge sources: Notion, NotebookLM, Markdown, local documentation, GitHub Wiki
-- Agents: Gemini CLI, OpenCode, Aider, Amp, Cursor, Windsurf, future coding agents
+- Agents: dedicated Gemini CLI, OpenCode, Aider, Amp, Cursor, Windsurf, and future coding-agent providers
 - Dashboards: active repositories, AI usage, activity, project health, repository health, knowledge graph
 - Automation: daily summaries, weekly engineering reports, release notes, changelogs, PR summaries, architecture docs
 

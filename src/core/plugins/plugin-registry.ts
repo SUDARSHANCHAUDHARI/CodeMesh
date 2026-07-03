@@ -78,45 +78,52 @@ const PLUGINS: PluginManifest[] = [
     capabilities: ["notebooklm", "documents"]
   },
   {
+    name: "agent-local",
+    kind: "agent",
+    status: "active",
+    description: "Detects local instruction files for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf.",
+    capabilities: ["gemini-cli", "opencode", "aider", "amp", "cursor", "windsurf", "handoff-context"]
+  },
+  {
     name: "agent-gemini-cli",
     kind: "agent",
     status: "planned",
-    description: "Gemini CLI instruction and context provider.",
+    description: "Dedicated Gemini CLI provider with richer project context.",
     capabilities: ["gemini-cli", "handoff-context"]
   },
   {
     name: "agent-opencode",
     kind: "agent",
     status: "planned",
-    description: "OpenCode instruction and context provider.",
+    description: "Dedicated OpenCode provider with richer project context.",
     capabilities: ["opencode", "handoff-context"]
   },
   {
     name: "agent-aider",
     kind: "agent",
     status: "planned",
-    description: "Aider instruction and context provider.",
+    description: "Dedicated Aider provider with richer project context.",
     capabilities: ["aider", "handoff-context"]
   },
   {
     name: "agent-amp",
     kind: "agent",
     status: "planned",
-    description: "Amp instruction and context provider.",
+    description: "Dedicated Amp provider with richer project context.",
     capabilities: ["amp", "handoff-context"]
   },
   {
     name: "agent-cursor",
     kind: "agent",
     status: "planned",
-    description: "Cursor rule and context provider.",
+    description: "Dedicated Cursor provider with richer project context.",
     capabilities: ["cursor", "rules", "handoff-context"]
   },
   {
     name: "agent-windsurf",
     kind: "agent",
     status: "planned",
-    description: "Windsurf rule and context provider.",
+    description: "Dedicated Windsurf provider with richer project context.",
     capabilities: ["windsurf", "rules", "handoff-context"]
   },
   {

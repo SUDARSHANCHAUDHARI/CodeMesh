@@ -8,6 +8,7 @@ import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
 import { ObsidianPlugin } from "../plugins/knowledge-obsidian/obsidian-plugin.js";
 import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
+import { LocalAgentPlugin } from "../plugins/agent-local/agent-local-plugin.js";
 import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-capsule-renderer.js";
 import { CapsuleService } from "./capsules/capsule-service.js";
 import { DashboardService } from "./dashboard/dashboard-service.js";
@@ -22,7 +23,7 @@ export class CodeMeshApp {
   private readonly knowledgePlugin = new ObsidianPlugin();
   private readonly memoryResolver = new MemoryResolver();
   private readonly pluginRegistry = new PluginRegistry();
-  private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin()];
+  private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin(), new LocalAgentPlugin()];
 
   async init(): Promise<string> {
     return this.configManager.init();

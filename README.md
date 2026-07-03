@@ -10,6 +10,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - SQLite index stored at `.codemesh/index.sqlite`
 - Read-only Obsidian structure detection
 - Claude/Codex instruction detection
+- Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf instruction detection
 - Markdown context capsules saved under `.codemesh/capsules/`
 - Repo portfolio navigation commands
 - Doctor health checks
