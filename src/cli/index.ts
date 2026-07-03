@@ -60,6 +60,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "language") {
+    const language = rest.join(" ").trim();
+    if (!language) {
+      throw new Error("Usage: codemesh repo language <name>");
+    }
+
+    const repositories = await app.languageRepos(language);
+    printRepositoryRows(repositories);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -227,6 +238,7 @@ Usage:
   codemesh scan vault
   codemesh repo search <query>
   codemesh repo category <name>
+  codemesh repo language <name>
   codemesh repo show <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]

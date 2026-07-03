@@ -113,6 +113,19 @@ export class SqliteStore {
     return rows.map(rowToRepositoryRecord);
   }
 
+  async listRepositoriesByLanguage(language: string): Promise<RepositoryRecord[]> {
+    const normalizedLanguage = language.toLowerCase() === "unknown" ? "" : language.toLowerCase();
+    const rows = await this.query(`
+      SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
+      FROM repositories
+      WHERE lower(coalesce(primary_language, '')) = ${toSqlValue(normalizedLanguage)}
+      ORDER BY category, name
+      LIMIT 250;
+    `);
+
+    return rows.map(rowToRepositoryRecord);
+  }
+
   async listDirtyRepositories(): Promise<RepositoryRecord[]> {
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at

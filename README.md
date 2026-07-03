@@ -22,6 +22,7 @@ pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
 pnpm dev repo category AIProjects
+pnpm dev repo language Kotlin
 pnpm dev repo show CodeMesh
 pnpm dev repo dirty
 pnpm dev repo stale --days 30
@@ -40,6 +41,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 ```
 
 `repo category <name>` lists indexed repositories in an exact category, case-insensitively.
+
+`repo language <name>` lists indexed repositories by detected language. Use `unknown` for repos without a detected primary language.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 
