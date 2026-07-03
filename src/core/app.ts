@@ -7,12 +7,14 @@ import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
 import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-capsule-renderer.js";
 import { CapsuleService } from "./capsules/capsule-service.js";
+import { MemoryResolver } from "./memory/memory-resolver.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
 
 export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
   private readonly repoPlugin = new RepoLocalPlugin();
   private readonly knowledgePlugin = new ObsidianPlugin();
+  private readonly memoryResolver = new MemoryResolver();
   private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin()];
 
   async init(): Promise<string> {
@@ -73,7 +75,11 @@ export class CodeMeshApp {
       throw new Error(`No repository matched query: ${repoQuery}`);
     }
 
-    const knowledgeDocuments = await this.knowledgePlugin.detect(config);
+    const knowledgeDocuments = await this.memoryResolver.resolve(
+      config,
+      repository,
+      await this.knowledgePlugin.detect(config)
+    );
     const agentProfiles = (await Promise.all(this.agentPlugins.map((plugin) => plugin.detect(config)))).flat();
 
     return {

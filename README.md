@@ -40,6 +40,8 @@ Capsule templates:
 - `codex`: adds Codex-focused inspection, AGENTS.md, scope, and verification guidance
 - `claude`: adds Claude-focused CLAUDE.md, vault-boundary, and handoff guidance
 
+Capsules also resolve known project memory folders when present, including `_RepoMem`, `_Projects`, `_Codex/Memories`, and `_Claude/Memories`. Obsidian remains read-only.
+
 ## Confirmed Local Paths
 
 ```text
