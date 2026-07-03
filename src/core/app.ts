@@ -14,6 +14,7 @@ import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-ca
 import { CapsuleService } from "./capsules/capsule-service.js";
 import { DashboardService } from "./dashboard/dashboard-service.js";
 import { MemoryResolver } from "./memory/memory-resolver.js";
+import { MemoryService, type MemoryKind } from "./memory/memory-service.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
 import { ReportService, type ReportKind } from "./reports/report-service.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
@@ -181,6 +182,24 @@ export class CodeMeshApp {
     const config = await this.configManager.load();
     const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
     return capsuleService.show(filename);
+  }
+
+  async addMemory(kind: MemoryKind, text: string, repo?: string): Promise<string> {
+    const config = await this.configManager.load();
+    const memoryService = new MemoryService(config.codemeshRepoPath);
+    return memoryService.add({ kind, text, repo });
+  }
+
+  async listMemory() {
+    const config = await this.configManager.load();
+    const memoryService = new MemoryService(config.codemeshRepoPath);
+    return memoryService.list();
+  }
+
+  async showMemory(filename: string): Promise<string> {
+    const config = await this.configManager.load();
+    const memoryService = new MemoryService(config.codemeshRepoPath);
+    return memoryService.show(filename);
   }
 
   private async buildCapsuleInput(repoQuery: string, task: string, template: CapsuleTemplate) {

@@ -43,6 +43,9 @@ pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template 
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
 pnpm dev capsule show <filename>
+pnpm dev memory add --type decision --repo CodeMesh --text "Keep Obsidian read-only."
+pnpm dev memory list
+pnpm dev memory show <filename>
 pnpm dev doctor
 ```
 
@@ -71,6 +74,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 
 `capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
+
+`memory add`, `memory list`, and `memory show` manage local project, decision, architecture, prompt, and summary memory under `.codemesh/memory/`.
 
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
 

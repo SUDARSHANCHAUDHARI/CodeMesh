@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { CodeMeshApp } from "../core/app.js";
+import type { MemoryKind } from "../core/memory/memory-service.js";
 import type { CapsuleTemplate } from "../core/plugins/types.js";
 
 const app = new CodeMeshApp();
@@ -225,6 +226,37 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "memory" && subcommand === "add") {
+    const kind = readMemoryKind(rest);
+    const text = readFlag(rest, "--text");
+    const repo = readFlag(rest, "--repo");
+    if (!text) {
+      throw new Error("Usage: codemesh memory add --type project|decision|architecture|prompt|summary --text <text> [--repo <name>]");
+    }
+
+    const memoryPath = await app.addMemory(kind, text, repo);
+    console.log(`Created memory: ${memoryPath}`);
+    return;
+  }
+
+  if (command === "memory" && subcommand === "list") {
+    const entries = await app.listMemory();
+    for (const entry of entries) {
+      console.log(`${entry.createdAt}\t${entry.kind}\t${entry.filename}`);
+    }
+    return;
+  }
+
+  if (command === "memory" && subcommand === "show") {
+    const filename = rest[0];
+    if (!filename) {
+      throw new Error("Usage: codemesh memory show <filename>");
+    }
+
+    console.log(await app.showMemory(filename));
+    return;
+  }
+
   if (command === "doctor") {
     const lines = await app.doctor();
     console.log(["CodeMesh doctor", ...lines].join("\n"));
@@ -250,6 +282,15 @@ function readTemplate(args: string[]): CapsuleTemplate {
   }
 
   throw new Error("Invalid template. Use one of: neutral, codex, claude");
+}
+
+function readMemoryKind(args: string[]): MemoryKind {
+  const value = readFlag(args, "--type") ?? "project";
+  if (value === "project" || value === "decision" || value === "architecture" || value === "prompt" || value === "summary") {
+    return value;
+  }
+
+  throw new Error("Invalid memory type. Use one of: project, decision, architecture, prompt, summary");
 }
 
 function readNumberFlag(args: string[], name: string, defaultValue: number): number {
@@ -316,6 +357,9 @@ Usage:
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list
   codemesh capsule show <filename>
+  codemesh memory add --type <kind> --text <text> [--repo <name>]
+  codemesh memory list
+  codemesh memory show <filename>
   codemesh doctor
 `);
 }
