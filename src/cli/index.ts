@@ -192,6 +192,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "open") {
+    const query = positionalArgs(rest).join(" ").trim();
+    if (!query) {
+      throw new Error("Usage: codemesh repo open <query> [--dry-run]");
+    }
+
+    const target = await app.openRepo(query, hasFlag(rest, "--dry-run"));
+    console.log(target);
+    return;
+  }
+
   if (command === "repo" && subcommand === "dirty") {
     const repositories = await app.dirtyRepos();
     for (const repo of repositories) {
@@ -489,6 +500,7 @@ Usage:
   codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20] [--json]
   codemesh repo show <query>
   codemesh repo path <query>
+  codemesh repo open <query> [--dry-run]
   codemesh repo dirty
   codemesh repo stale [--days 30]
   codemesh repo summary

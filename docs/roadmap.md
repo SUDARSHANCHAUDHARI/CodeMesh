@@ -32,6 +32,7 @@
 - JSON output for repo provider comparison
 - Repo show command for full indexed metadata
 - Repo path command for shell workflows
+- Repo open command for local path and URL navigation
 - Repo dirty command for local-change triage
 - Repo stale command for age-based project review
 - Repo summary command for portfolio counts

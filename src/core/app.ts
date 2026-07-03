@@ -127,6 +127,20 @@ export class CodeMeshApp {
     return repository;
   }
 
+  async openRepo(query: string, dryRun = false): Promise<string> {
+    const repositories = await this.searchRepos(query);
+    const repository = repositories.find((repo) => repo.source === "repo-local") ?? repositories[0];
+    if (!repository) {
+      throw new Error(`No repository matched query: ${query}`);
+    }
+
+    if (!dryRun) {
+      await openTarget(repository.path);
+    }
+
+    return repository.path;
+  }
+
   async dirtyRepos() {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
@@ -331,5 +345,27 @@ function commandAvailable(command: string, args: string[]): Promise<boolean> {
 
     child.on("error", () => resolve(false));
     child.on("close", (code) => resolve(code === 0));
+  });
+}
+
+function openTarget(target: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const child = spawn("open", [target], {
+      stdio: ["ignore", "ignore", "pipe"]
+    });
+
+    let stderr = "";
+    child.stderr.on("data", (chunk) => {
+      stderr += String(chunk);
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+
+      reject(new Error(stderr || `open exited with code ${code}`));
+    });
   });
 }

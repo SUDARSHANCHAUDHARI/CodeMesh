@@ -44,6 +44,7 @@ pnpm dev repo compare --limit 20
 pnpm dev repo compare --json
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
+pnpm dev repo open CodeMesh --dry-run
 pnpm dev repo dirty
 pnpm dev repo stale --days 30
 pnpm dev repo summary
@@ -89,6 +90,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 
 `repo path <query>` prints only the matched repository path for shell workflows.
+
+`repo open <query>` opens the matched local path or remote URL with the system default app. Use `--dry-run` to print the target without opening it.
 
 `repo dirty` lists indexed repositories with local changes, sorted by changed file count.
 
