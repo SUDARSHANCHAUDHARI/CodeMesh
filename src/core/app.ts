@@ -10,6 +10,7 @@ import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
 import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-capsule-renderer.js";
 import { CapsuleService } from "./capsules/capsule-service.js";
+import { DashboardService } from "./dashboard/dashboard-service.js";
 import { MemoryResolver } from "./memory/memory-resolver.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
@@ -103,6 +104,18 @@ export class CodeMeshApp {
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
     return store.repositorySummary();
+  }
+
+  async generateDashboard(): Promise<string> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const dashboardService = new DashboardService(config.codemeshRepoPath);
+    return dashboardService.generate({
+      summary: await store.repositorySummary(),
+      repositories: await store.listRepositories(),
+      plugins: this.pluginRegistry.list()
+    });
   }
 
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {

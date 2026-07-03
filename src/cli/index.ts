@@ -152,6 +152,12 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "dashboard" && subcommand === "generate") {
+    const dashboardPath = await app.generateDashboard();
+    console.log(`Generated dashboard: ${dashboardPath}`);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -276,6 +282,7 @@ Usage:
   codemesh repo dirty
   codemesh repo stale [--days 30]
   codemesh repo summary
+  codemesh dashboard generate
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

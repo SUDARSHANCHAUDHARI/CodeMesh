@@ -39,6 +39,7 @@
 
 - First-party plugin registry and `plugins list`
 - Local dashboard
+- Static dashboard generator
 - Capsule history browser
 - Stable plugin manifest draft
 - GitHub read-only provider

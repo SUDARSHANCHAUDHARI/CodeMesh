@@ -3,5 +3,6 @@ dist/
 .codemesh/config.json
 .codemesh/index.sqlite
 .codemesh/capsules/*.md
+.codemesh/dashboards/*.html
 *.log
 .DS_Store
