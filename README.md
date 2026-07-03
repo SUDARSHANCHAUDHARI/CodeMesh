@@ -53,6 +53,7 @@ pnpm dev report weekly
 pnpm dev report release-notes --repo CodeMesh
 pnpm dev report changelog --repo CodeMesh
 pnpm dev report pr-summary --repo CodeMesh
+pnpm dev report repo-comparison
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -116,6 +117,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `report release-notes` and `report changelog` generate local Markdown from recent commits in a matched repository.
 
 `report pr-summary` generates local Markdown from GitHub pull requests using the authenticated `gh` CLI.
+
+`report repo-comparison` saves the local/GitHub comparison, likely matches, and unresolved-only repositories as Markdown.
 
 Capsule templates:
 

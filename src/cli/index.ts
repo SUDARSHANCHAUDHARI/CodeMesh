@@ -256,6 +256,15 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "report" && subcommand === "repo-comparison") {
+    const leftSource = readFlag(rest, "--left") ?? "repo-local";
+    const rightSource = readFlag(rest, "--right") ?? "repo-github";
+    const limit = readNumberFlag(rest, "--limit", 25);
+    const reportPath = await app.generateRepoComparisonReport(leftSource, rightSource, limit);
+    console.log(`Generated report: ${reportPath}`);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -489,6 +498,7 @@ Usage:
   codemesh report release-notes --repo <query> [--limit 20]
   codemesh report changelog --repo <query> [--limit 20]
   codemesh report pr-summary --repo <query> [--limit 20]
+  codemesh report repo-comparison [--left repo-local] [--right repo-github] [--limit 25]
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

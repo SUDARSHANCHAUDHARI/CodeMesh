@@ -201,6 +201,16 @@ export class CodeMeshApp {
     });
   }
 
+  async generateRepoComparisonReport(leftSource?: string, rightSource?: string, limit?: number): Promise<string> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const reportService = new ReportService(config.codemeshRepoPath);
+    return reportService.generateRepositoryComparison({
+      comparison: await store.compareRepositorySources(leftSource, rightSource, limit)
+    });
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);

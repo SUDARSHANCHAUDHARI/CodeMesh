@@ -53,6 +53,7 @@
 - Daily and weekly Markdown report generator
 - Release notes and changelog generator
 - GitHub PR summary generator
+- Repository source comparison report generator
 - Local project/decision/architecture/prompt/summary memory commands
 - Local multi-agent instruction detector
 - Local Markdown knowledge provider

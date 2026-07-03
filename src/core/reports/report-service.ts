@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import type { PluginManifest, RepositoryRecord } from "../plugins/types.js";
-import type { RepositorySummary } from "../storage/sqlite-store.js";
+import type { RepositorySourceComparison, RepositorySummary } from "../storage/sqlite-store.js";
 
 export type ReportKind = "daily" | "weekly" | "release-notes" | "changelog";
 
@@ -52,6 +52,17 @@ export class ReportService {
     const repoSlug = githubSlug(input.repository, input.githubOwner);
     const pullRequests = await githubPullRequests(repoSlug, input.limit);
     await writeFile(reportPath, renderPrSummary(input.repository, repoSlug, pullRequests), "utf8");
+    return reportPath;
+  }
+
+  async generateRepositoryComparison(input: {
+    comparison: RepositorySourceComparison;
+  }): Promise<string> {
+    const reportsDir = join(this.codemeshRepoPath, ".codemesh", "reports");
+    await mkdir(reportsDir, { recursive: true });
+    const date = new Date().toISOString().slice(0, 10);
+    const reportPath = join(reportsDir, `${date}-repo-comparison.md`);
+    await writeFile(reportPath, renderRepositoryComparison(input.comparison), "utf8");
     return reportPath;
   }
 }
@@ -181,6 +192,53 @@ ${pullRequests.map((pr) => {
   return `- #${pr.number} ${pr.title} [${pr.state}] by ${author}, updated ${updated} (${pr.url})`;
 }).join("\n") || "- No open pull requests detected"}
 `;
+}
+
+function renderRepositoryComparison(comparison: RepositorySourceComparison): string {
+  return `# Repository Source Comparison
+
+Generated: ${new Date().toISOString()}
+
+Sources: ${comparison.leftSource} <-> ${comparison.rightSource}
+
+## Summary
+
+- ${comparison.leftSource} total: ${comparison.leftTotal}
+- ${comparison.rightSource} total: ${comparison.rightTotal}
+- Exact overlap: ${comparison.overlapTotal}
+- Likely matches: ${comparison.likelyMatchTotal}
+- Unresolved ${comparison.leftSource} only: ${comparison.leftOnlyTotal}
+- Unresolved ${comparison.rightSource} only: ${comparison.rightOnlyTotal}
+
+## Exact Overlap Sample
+
+${comparison.overlap.map((group) => {
+  const locations = group.repositories
+    .map((repo) => `${repo.source} ${repo.category}/${repo.name}`)
+    .join("; ");
+  return `- ${group.name}: ${locations}`;
+}).join("\n") || "- None"}
+
+## Likely Matches
+
+${comparison.likelyMatches.map((match) => {
+  const left = `${match.left.category}/${match.left.name}`;
+  const right = `${match.right.category}/${match.right.name}`;
+  return `- ${match.matchKey}: ${left} <-> ${right}`;
+}).join("\n") || "- None"}
+
+## Unresolved ${comparison.leftSource} Only
+
+${comparisonRepoRows(comparison.leftOnly)}
+
+## Unresolved ${comparison.rightSource} Only
+
+${comparisonRepoRows(comparison.rightOnly)}
+`;
+}
+
+function comparisonRepoRows(repositories: RepositoryRecord[]): string {
+  return repositories.map((repo) => `- ${repo.category}/${repo.name} (${repo.path})`).join("\n") || "- None";
 }
 
 function githubSlug(repository: RepositoryRecord, fallbackOwner: string): string {
