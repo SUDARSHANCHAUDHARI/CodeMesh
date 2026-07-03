@@ -13,6 +13,7 @@ import { CapsuleService } from "./capsules/capsule-service.js";
 import { DashboardService } from "./dashboard/dashboard-service.js";
 import { MemoryResolver } from "./memory/memory-resolver.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
+import { ReportService, type ReportKind } from "./reports/report-service.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
 
 export class CodeMeshApp {
@@ -114,6 +115,22 @@ export class CodeMeshApp {
     return dashboardService.generate({
       summary: await store.repositorySummary(),
       repositories: await store.listRepositories(),
+      plugins: this.pluginRegistry.list()
+    });
+  }
+
+  async generateReport(kind: ReportKind): Promise<string> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const staleDays = kind === "daily" ? 30 : 90;
+    const staleThreshold = new Date(Date.now() - staleDays * 24 * 60 * 60 * 1000).toISOString();
+    const reportService = new ReportService(config.codemeshRepoPath);
+    return reportService.generate({
+      kind,
+      summary: await store.repositorySummary(),
+      dirtyRepositories: await store.listDirtyRepositories(),
+      staleRepositories: await store.listStaleRepositories(staleThreshold),
       plugins: this.pluginRegistry.list()
     });
   }

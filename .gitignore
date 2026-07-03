@@ -4,5 +4,6 @@ dist/
 .codemesh/index.sqlite
 .codemesh/capsules/*.md
 .codemesh/dashboards/*.html
+.codemesh/reports/*.md
 *.log
 .DS_Store

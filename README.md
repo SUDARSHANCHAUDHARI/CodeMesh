@@ -33,6 +33,8 @@ pnpm dev repo dirty
 pnpm dev repo stale --days 30
 pnpm dev repo summary
 pnpm dev dashboard generate
+pnpm dev report daily
+pnpm dev report weekly
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -71,6 +73,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
 
 `dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html`.
+
+`report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
 
 Capsule templates:
 

@@ -40,6 +40,7 @@
 - First-party plugin registry and `plugins list`
 - Local dashboard
 - Static dashboard generator
+- Daily and weekly Markdown report generator
 - Capsule history browser
 - Stable plugin manifest draft
 - GitHub read-only provider

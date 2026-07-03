@@ -158,6 +158,12 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "report" && (subcommand === "daily" || subcommand === "weekly")) {
+    const reportPath = await app.generateReport(subcommand);
+    console.log(`Generated report: ${reportPath}`);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -283,6 +289,8 @@ Usage:
   codemesh repo stale [--days 30]
   codemesh repo summary
   codemesh dashboard generate
+  codemesh report daily
+  codemesh report weekly
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list
