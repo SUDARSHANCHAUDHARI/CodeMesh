@@ -53,6 +53,8 @@
 - First-party plugin registry and `plugins list`
 - Future vision status doc
 - Optional read-only GitHub repository provider
+- Optional read-only GitLab repository provider
+- Optional read-only Bitbucket repository provider
 - Local dashboard
 - Static dashboard generator
 - Daily and weekly Markdown report generator

@@ -8,6 +8,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - First-party plugin registry
 - Category-based local repository discovery
 - Optional read-only GitHub repository discovery through `gh`
+- Optional read-only GitLab and Bitbucket repository discovery through environment tokens
 - Local Markdown knowledge discovery
 - Top-level repo discovery under the repo category root
 - SQLite index stored at `.codemesh/index.sqlite`
@@ -32,6 +33,8 @@ pnpm dev init
 pnpm dev plugins list
 pnpm dev scan repos
 pnpm dev scan github
+pnpm dev scan gitlab
+pnpm dev scan bitbucket
 pnpm dev scan vault
 pnpm dev scan knowledge
 pnpm dev repo search CodeMesh
@@ -136,6 +139,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `scan knowledge` detects Obsidian knowledge plus local repository Markdown docs without writing to any source.
 
 `scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
+
+`scan gitlab` indexes read-only GitLab metadata when `gitlabGroup` is configured and `GITLAB_TOKEN` is set. `scan bitbucket` indexes read-only Bitbucket metadata when `bitbucketWorkspace` is configured and `BITBUCKET_TOKEN` is set.
 
 `dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, likely matches, usage metrics, provider overlap, recent repos, dirty repos, and plugin status.
 

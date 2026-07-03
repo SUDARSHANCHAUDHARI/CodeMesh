@@ -59,16 +59,16 @@ const PLUGINS: PluginManifest[] = [
   {
     name: "repo-gitlab",
     kind: "repository-source",
-    status: "planned",
-    description: "Read-only GitLab repository metadata provider.",
-    capabilities: ["gitlab", "remote-metadata"]
+    status: "active",
+    description: "Optional read-only GitLab repository metadata provider.",
+    capabilities: ["gitlab", "remote-metadata", "optional-token"]
   },
   {
     name: "repo-bitbucket",
     kind: "repository-source",
-    status: "planned",
-    description: "Read-only Bitbucket repository metadata provider.",
-    capabilities: ["bitbucket", "remote-metadata"]
+    status: "active",
+    description: "Optional read-only Bitbucket repository metadata provider.",
+    capabilities: ["bitbucket", "remote-metadata", "optional-token"]
   },
   {
     name: "knowledge-notion",

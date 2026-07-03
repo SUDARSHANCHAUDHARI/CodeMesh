@@ -6,6 +6,8 @@ import { ConfigManager } from "./config/config-manager.js";
 import { SqliteStore } from "./storage/sqlite-store.js";
 import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
 import { GitHubRepoPlugin } from "../plugins/repo-github/github-repo-plugin.js";
+import { GitLabRepoPlugin } from "../plugins/repo-gitlab/gitlab-repo-plugin.js";
+import { BitbucketRepoPlugin } from "../plugins/repo-bitbucket/bitbucket-repo-plugin.js";
 import { ObsidianPlugin } from "../plugins/knowledge-obsidian/obsidian-plugin.js";
 import { MarkdownKnowledgePlugin } from "../plugins/knowledge-markdown/markdown-knowledge-plugin.js";
 import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
@@ -32,6 +34,8 @@ export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
   private readonly repoPlugin = new RepoLocalPlugin();
   private readonly githubRepoPlugin = new GitHubRepoPlugin();
+  private readonly gitlabRepoPlugin = new GitLabRepoPlugin();
+  private readonly bitbucketRepoPlugin = new BitbucketRepoPlugin();
   private readonly knowledgePlugin = new ObsidianPlugin();
   private readonly knowledgePlugins = [this.knowledgePlugin, new MarkdownKnowledgePlugin()];
   private readonly memoryResolver = new MemoryResolver();
@@ -60,6 +64,24 @@ export class CodeMeshApp {
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
     const repositories = await this.githubRepoPlugin.discover(config);
+    await store.saveRepositories(repositories);
+    return repositories.length;
+  }
+
+  async scanGitLabRepos(): Promise<number> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const repositories = await this.gitlabRepoPlugin.discover(config);
+    await store.saveRepositories(repositories);
+    return repositories.length;
+  }
+
+  async scanBitbucketRepos(): Promise<number> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const repositories = await this.bitbucketRepoPlugin.discover(config);
     await store.saveRepositories(repositories);
     return repositories.length;
   }
