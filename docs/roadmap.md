@@ -23,6 +23,7 @@
 - Repo language command for language-scoped navigation
 - Repo framework command for framework-scoped navigation
 - Repo show command for full indexed metadata
+- Repo path command for shell workflows
 - Repo dirty command for local-change triage
 - Repo stale command for age-based project review
 - Repo summary command for portfolio counts

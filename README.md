@@ -25,6 +25,7 @@ pnpm dev repo category AIProjects
 pnpm dev repo language Kotlin
 pnpm dev repo framework Next.js
 pnpm dev repo show CodeMesh
+pnpm dev repo path GitGet
 pnpm dev repo dirty
 pnpm dev repo stale --days 30
 pnpm dev repo summary
@@ -48,6 +49,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo framework <name>` lists indexed repositories by detected framework. Use `unknown` for repos without a detected framework.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
+
+`repo path <query>` prints only the matched repository path for shell workflows.
 
 `repo dirty` lists indexed repositories with local changes, sorted by changed file count.
 

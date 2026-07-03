@@ -106,6 +106,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "path") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      throw new Error("Usage: codemesh repo path <query>");
+    }
+
+    const repo = await app.showRepo(query);
+    console.log(repo.path);
+    return;
+  }
+
   if (command === "repo" && subcommand === "dirty") {
     const repositories = await app.dirtyRepos();
     for (const repo of repositories) {
@@ -252,6 +263,7 @@ Usage:
   codemesh repo language <name>
   codemesh repo framework <name>
   codemesh repo show <query>
+  codemesh repo path <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]
   codemesh repo summary
