@@ -59,6 +59,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 
 `capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
 
+`doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
+
 Capsule templates:
 
 - `neutral`: portable context for any coding agent

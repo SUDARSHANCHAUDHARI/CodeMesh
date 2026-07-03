@@ -1,4 +1,7 @@
+import { access } from "node:fs/promises";
+import { constants } from "node:fs";
 import { join } from "node:path";
+import { spawn } from "node:child_process";
 import { ConfigManager } from "./config/config-manager.js";
 import { SqliteStore } from "./storage/sqlite-store.js";
 import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
@@ -160,12 +163,43 @@ export class CodeMeshApp {
 
   async doctor(): Promise<string[]> {
     const config = await this.configManager.load();
-    const checks = [
-      ["Repo categories root", config.repoCategoriesRoot],
-      ["Obsidian vault", config.obsidianVaultPath],
-      ["CodeMesh repo", config.codemeshRepoPath]
-    ];
+    const codemeshDataPath = join(config.codemeshRepoPath, ".codemesh");
+    const indexPath = join(codemeshDataPath, "index.sqlite");
+    const capsulesPath = join(codemeshDataPath, "capsules");
+    const sqliteAvailable = await commandAvailable("sqlite3", ["--version"]);
+    const checks = await Promise.all([
+      pathCheck("Repo categories root", config.repoCategoriesRoot),
+      pathCheck("Obsidian vault (read-only)", config.obsidianVaultPath),
+      pathCheck("CodeMesh repo", config.codemeshRepoPath),
+      pathCheck("CodeMesh data directory", codemeshDataPath),
+      pathCheck("SQLite index", indexPath),
+      pathCheck("Capsule output directory", capsulesPath)
+    ]);
 
-    return checks.map(([label, value]) => `${label}: ${value}`);
+    return [
+      ...checks,
+      `${sqliteAvailable ? "PASS" : "FAIL"} sqlite3 command: ${sqliteAvailable ? "available" : "missing"}`,
+      "PASS Obsidian write policy: read-only"
+    ];
   }
+}
+
+async function pathCheck(label: string, path: string): Promise<string> {
+  try {
+    await access(path, constants.F_OK);
+    return `PASS ${label}: ${path}`;
+  } catch {
+    return `WARN ${label}: missing at ${path}`;
+  }
+}
+
+function commandAvailable(command: string, args: string[]): Promise<boolean> {
+  return new Promise((resolve) => {
+    const child = spawn(command, args, {
+      stdio: ["ignore", "ignore", "ignore"]
+    });
+
+    child.on("error", () => resolve(false));
+    child.on("close", (code) => resolve(code === 0));
+  });
 }
