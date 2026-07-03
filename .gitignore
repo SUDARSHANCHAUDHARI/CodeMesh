@@ -6,5 +6,6 @@ dist/
 .codemesh/dashboards/*.html
 .codemesh/reports/*.md
 .codemesh/memory/*.md
+.codemesh/usage/*.jsonl
 *.log
 .DS_Store

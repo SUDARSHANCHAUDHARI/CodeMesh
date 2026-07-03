@@ -18,6 +18,7 @@ import { MemoryResolver } from "./memory/memory-resolver.js";
 import { MemoryService, type MemoryKind } from "./memory/memory-service.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
 import { ReportService, type ReportKind } from "./reports/report-service.js";
+import { UsageService, type UsageEventInput } from "./usage/usage-service.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
 
 export interface RepoClonePlanItem {
@@ -299,6 +300,24 @@ export class CodeMeshApp {
     const config = await this.configManager.load();
     const memoryService = new MemoryService(config.codemeshRepoPath);
     return memoryService.show(filename);
+  }
+
+  async addUsage(input: UsageEventInput) {
+    const config = await this.configManager.load();
+    const usageService = new UsageService(config.codemeshRepoPath);
+    return usageService.add(input);
+  }
+
+  async listUsage(limit?: number) {
+    const config = await this.configManager.load();
+    const usageService = new UsageService(config.codemeshRepoPath);
+    return usageService.list(limit);
+  }
+
+  async usageSummary(days?: number) {
+    const config = await this.configManager.load();
+    const usageService = new UsageService(config.codemeshRepoPath);
+    return usageService.summary(days);
   }
 
   private async buildCapsuleInput(repoQuery: string, task: string, template: CapsuleTemplate) {

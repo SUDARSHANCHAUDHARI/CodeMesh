@@ -19,6 +19,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Local dashboard generation
 - Daily, weekly, release-note, and changelog reports
 - Local project, decision, architecture, prompt, and summary memory
+- Local AI usage tracking
 - Doctor health checks
 
 ## Commands
@@ -67,6 +68,9 @@ pnpm dev capsule show <filename>
 pnpm dev memory add --type decision --repo CodeMesh --text "Keep Obsidian read-only."
 pnpm dev memory list
 pnpm dev memory show <filename>
+pnpm dev usage add --agent Codex --repo CodeMesh --task "Plan the next task"
+pnpm dev usage list --limit 20
+pnpm dev usage summary --days 7
 pnpm dev doctor
 ```
 
@@ -115,6 +119,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
 
 `memory add`, `memory list`, and `memory show` manage local project, decision, architecture, prompt, and summary memory under `.codemesh/memory/`.
+
+`usage add`, `usage list`, and `usage summary` track local AI usage events under `.codemesh/usage/`.
 
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
 

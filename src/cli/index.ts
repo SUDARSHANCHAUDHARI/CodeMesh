@@ -391,6 +391,47 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "usage" && subcommand === "add") {
+    const agent = readFlag(rest, "--agent");
+    const task = readFlag(rest, "--task");
+    const repo = readFlag(rest, "--repo");
+    if (!agent || !task) {
+      throw new Error('Usage: codemesh usage add --agent <name> --task "<task>" [--repo <name>] [--tokens-in n] [--tokens-out n] [--cost-usd n]');
+    }
+
+    const event = await app.addUsage({
+      agent,
+      task,
+      repo,
+      tokensIn: readOptionalNumberFlag(rest, "--tokens-in"),
+      tokensOut: readOptionalNumberFlag(rest, "--tokens-out"),
+      costUsd: readOptionalNumberFlag(rest, "--cost-usd")
+    });
+    console.log(`${event.createdAt}\t${event.agent}\t${event.repo ?? "global"}\t${event.task}`);
+    return;
+  }
+
+  if (command === "usage" && subcommand === "list") {
+    const limit = readNumberFlag(rest, "--limit", 20);
+    const events = await app.listUsage(limit);
+    for (const event of events) {
+      console.log(`${event.createdAt}\t${event.agent}\t${event.repo ?? "global"}\t${event.tokensIn ?? 0}\t${event.tokensOut ?? 0}\t${event.costUsd ?? 0}\t${event.task}`);
+    }
+    return;
+  }
+
+  if (command === "usage" && subcommand === "summary") {
+    const days = readNumberFlag(rest, "--days", 7);
+    const summary = await app.usageSummary(days);
+    console.log(`Days: ${summary.days}`);
+    console.log(`Events: ${summary.totalEvents}`);
+    console.log(`Tokens in: ${summary.totalTokensIn}`);
+    console.log(`Tokens out: ${summary.totalTokensOut}`);
+    console.log(`Cost USD: ${summary.totalCostUsd.toFixed(4)}`);
+    printUsageAgentRows(summary.byAgent);
+    return;
+  }
+
   if (command === "doctor") {
     const lines = await app.doctor();
     console.log(["CodeMesh doctor", ...lines].join("\n"));
@@ -440,6 +481,20 @@ function readNumberFlag(args: string[], name: string, defaultValue: number): num
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed < 1) {
     throw new Error(`${name} must be a positive number.`);
+  }
+
+  return parsed;
+}
+
+function readOptionalNumberFlag(args: string[], name: string): number | undefined {
+  const value = readFlag(args, name);
+  if (value === undefined) {
+    return undefined;
+  }
+
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new Error(`${name} must be a non-negative number.`);
   }
 
   return parsed;
@@ -527,6 +582,13 @@ function printCloneCommands(rows: Awaited<ReturnType<CodeMeshApp["repoClonePlan"
   }
 }
 
+function printUsageAgentRows(rows: Awaited<ReturnType<CodeMeshApp["usageSummary"]>>["byAgent"]): void {
+  console.log("\nBy agent");
+  for (const row of rows) {
+    console.log(`${row.events}\t${row.agent}\t${row.tokensIn}\t${row.tokensOut}\t${row.costUsd.toFixed(4)}`);
+  }
+}
+
 function shellQuote(value: string): string {
   return `'${value.replaceAll("'", "'\\''")}'`;
 }
@@ -574,6 +636,9 @@ Usage:
   codemesh memory add --type <kind> --text <text> [--repo <name>]
   codemesh memory list
   codemesh memory show <filename>
+  codemesh usage add --agent <name> --task "<task>" [--repo <name>] [--tokens-in n] [--tokens-out n] [--cost-usd n]
+  codemesh usage list [--limit 20]
+  codemesh usage summary [--days 7]
   codemesh doctor
 `);
 }
