@@ -2,7 +2,7 @@
 
 CodeMesh is a local-first AI developer workspace for coordinating repositories, Obsidian knowledge, and coding agents.
 
-## MVP Scope
+## v0.2 Scope
 
 - Single TypeScript CLI app
 - Category-based local repository discovery
@@ -10,7 +10,8 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Read-only Obsidian structure detection
 - Claude/Codex instruction detection
 - Markdown context capsules saved under `.codemesh/capsules/`
-- Doctor command
+- Repo portfolio navigation commands
+- Doctor health checks
 
 ## Commands
 
