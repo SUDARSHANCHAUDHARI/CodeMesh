@@ -37,6 +37,7 @@
 
 ## v0.3
 
+- First-party plugin registry and `plugins list`
 - Local dashboard
 - Capsule history browser
 - Stable plugin manifest draft

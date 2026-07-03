@@ -1,12 +1,14 @@
 # Architecture
 
-CodeMesh MVP is a single TypeScript CLI app with internal plugin-style boundaries.
+CodeMesh is a local-first TypeScript CLI that coordinates local repositories, knowledge sources, coding-agent instructions, context capsules, dashboards, and automation outputs.
+
+The core stays small and stable. New agents, knowledge providers, repository providers, dashboards, and automations are represented as plugins. The current implementation uses first-party in-process plugins; external plugin loading should be added only after the local plugin contracts settle.
 
 ## Core Modules
 
 - `config`: loads local paths and scan settings.
 - `storage`: writes the lightweight SQLite index.
-- `plugins`: defines internal interfaces for repository, knowledge, agent, and capsule providers.
+- `plugins`: defines plugin manifests and internal interfaces for repository, knowledge, agent, capsule, dashboard, and automation providers.
 - `capsules`: creates portable Markdown context capsules.
 - `cli`: exposes the command surface.
 
@@ -17,6 +19,14 @@ CodeMesh MVP is a single TypeScript CLI app with internal plugin-style boundarie
 - `agent-claude`: detects `CLAUDE.md`.
 - `agent-codex`: detects `CODEX.md` and `AGENTS.md`.
 - `capsule-markdown`: renders capsules as Markdown.
+
+## Planned Plugin Families
+
+- Repository sources: GitHub, GitLab, Bitbucket
+- Knowledge sources: Notion, NotebookLM, Markdown, local documentation, GitHub Wiki
+- Agents: Gemini CLI, OpenCode, Aider, Amp, Cursor, Windsurf, future coding agents
+- Dashboards: active repositories, AI usage, activity, project health, repository health, knowledge graph
+- Automation: daily summaries, weekly engineering reports, release notes, changelogs, PR summaries, architecture docs
 
 ## Storage
 
@@ -34,10 +44,7 @@ Generated capsules are stored in:
 
 ## Out of Scope
 
-- External plugin SDK
-- Dashboard
-- Automation
-- Notion
-- NotebookLM
-- Cloud sync
-- Writing to Obsidian
+- Cloud dependency
+- Forced migration
+- Writing to Obsidian without explicit approval
+- External plugin execution before first-party contracts stabilize

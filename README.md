@@ -20,6 +20,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 pnpm install
 pnpm build
 pnpm dev init
+pnpm dev plugins list
 pnpm dev scan repos
 pnpm dev scan vault
 pnpm dev repo search CodeMesh
@@ -65,6 +66,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
 
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
+
+`plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
 
 Capsule templates:
 

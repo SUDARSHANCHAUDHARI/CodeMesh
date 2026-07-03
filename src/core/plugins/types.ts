@@ -1,6 +1,16 @@
 import type { CodeMeshConfig } from "../config/types.js";
 
 export type CapsuleTemplate = "neutral" | "codex" | "claude";
+export type PluginKind = "repository-source" | "knowledge-source" | "agent" | "capsule-renderer" | "dashboard" | "automation";
+export type PluginStatus = "active" | "planned";
+
+export interface PluginManifest {
+  name: string;
+  kind: PluginKind;
+  status: PluginStatus;
+  description: string;
+  capabilities: string[];
+}
 
 export interface RepositoryRecord {
   id: string;

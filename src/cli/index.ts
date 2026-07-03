@@ -26,6 +26,14 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "plugins" && subcommand === "list") {
+    const plugins = app.listPlugins();
+    for (const plugin of plugins) {
+      console.log(`${plugin.status}\t${plugin.kind}\t${plugin.name}\t${plugin.capabilities.join(",")}`);
+    }
+    return;
+  }
+
   if (command === "scan" && subcommand === "repos") {
     const count = await app.scanRepos();
     console.log(`Indexed ${count} repositories.`);
@@ -256,6 +264,7 @@ function printHelp(): void {
 
 Usage:
   codemesh init
+  codemesh plugins list
   codemesh scan repos
   codemesh scan vault
   codemesh repo search <query>
