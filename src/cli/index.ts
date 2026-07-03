@@ -218,6 +218,18 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "report" && subcommand === "pr-summary") {
+    const repo = readFlag(rest, "--repo");
+    const limit = readNumberFlag(rest, "--limit", 20);
+    if (!repo) {
+      throw new Error("Usage: codemesh report pr-summary --repo <query> [--limit 20]");
+    }
+
+    const reportPath = await app.generatePrSummary(repo, limit);
+    console.log(`Generated report: ${reportPath}`);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -409,6 +421,7 @@ Usage:
   codemesh report weekly
   codemesh report release-notes --repo <query> [--limit 20]
   codemesh report changelog --repo <query> [--limit 20]
+  codemesh report pr-summary --repo <query> [--limit 20]
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

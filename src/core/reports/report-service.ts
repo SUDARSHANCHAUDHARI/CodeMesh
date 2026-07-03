@@ -38,6 +38,22 @@ export class ReportService {
     await writeFile(reportPath, renderRepositoryReport(input.kind, input.repository, commits), "utf8");
     return reportPath;
   }
+
+  async generatePrSummary(input: {
+    repository: RepositoryRecord;
+    githubOwner: string;
+    limit: number;
+  }): Promise<string> {
+    const reportsDir = join(this.codemeshRepoPath, ".codemesh", "reports");
+    await mkdir(reportsDir, { recursive: true });
+    const date = new Date().toISOString().slice(0, 10);
+    const safeRepoName = input.repository.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const reportPath = join(reportsDir, `${date}-${safeRepoName}-pr-summary.md`);
+    const repoSlug = githubSlug(input.repository, input.githubOwner);
+    const pullRequests = await githubPullRequests(repoSlug, input.limit);
+    await writeFile(reportPath, renderPrSummary(input.repository, repoSlug, pullRequests), "utf8");
+    return reportPath;
+  }
 }
 
 function renderReport(input: {
@@ -131,6 +147,86 @@ Last indexed: ${repository.lastSeenAt}
 
 ${sections.join("\n")}
 `;
+}
+
+interface PullRequestSummary {
+  number: number;
+  title: string;
+  state: string;
+  author?: {
+    login?: string;
+  };
+  updatedAt?: string;
+  url: string;
+}
+
+function renderPrSummary(repository: RepositoryRecord, repoSlug: string, pullRequests: PullRequestSummary[]): string {
+  return `# PR Summary: ${repository.name}
+
+Generated: ${new Date().toISOString()}
+
+Repository: ${repository.category}/${repository.name}
+GitHub: ${repoSlug}
+Path: ${repository.path}
+
+## Pull Requests
+
+${pullRequests.map((pr) => {
+  const author = pr.author?.login ?? "unknown";
+  const updated = pr.updatedAt?.slice(0, 10) ?? "unknown";
+  return `- #${pr.number} ${pr.title} [${pr.state}] by ${author}, updated ${updated} (${pr.url})`;
+}).join("\n") || "- No open pull requests detected"}
+`;
+}
+
+function githubSlug(repository: RepositoryRecord, fallbackOwner: string): string {
+  const urlMatch = repository.path.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/);
+  if (urlMatch) {
+    return `${urlMatch[1]}/${urlMatch[2]}`;
+  }
+
+  return `${fallbackOwner}/${repository.name}`;
+}
+
+function githubPullRequests(repoSlug: string, limit: number): Promise<PullRequestSummary[]> {
+  return new Promise((resolve, reject) => {
+    const child = spawn("gh", [
+      "pr",
+      "list",
+      "--repo",
+      repoSlug,
+      "--state",
+      "all",
+      "--limit",
+      String(Math.max(1, Math.floor(limit))),
+      "--json",
+      "number,title,state,author,updatedAt,url"
+    ], {
+      stdio: ["ignore", "pipe", "pipe"]
+    });
+
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => {
+      stdout += String(chunk);
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += String(chunk);
+    });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error(stderr || `gh pr list exited with code ${code}`));
+        return;
+      }
+
+      try {
+        resolve(JSON.parse(stdout) as PullRequestSummary[]);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  });
 }
 
 function recentCommits(repoPath: string, limit: number): Promise<string[]> {

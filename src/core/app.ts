@@ -174,6 +174,17 @@ export class CodeMeshApp {
     });
   }
 
+  async generatePrSummary(repoQuery: string, limit: number): Promise<string> {
+    const config = await this.configManager.load();
+    const repository = await this.showRepo(repoQuery);
+    const reportService = new ReportService(config.codemeshRepoPath);
+    return reportService.generatePrSummary({
+      repository,
+      githubOwner: config.githubOwner,
+      limit
+    });
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);

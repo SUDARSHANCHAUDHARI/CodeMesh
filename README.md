@@ -49,6 +49,7 @@ pnpm dev report daily
 pnpm dev report weekly
 pnpm dev report release-notes --repo CodeMesh
 pnpm dev report changelog --repo CodeMesh
+pnpm dev report pr-summary --repo CodeMesh
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -104,6 +105,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
 
 `report release-notes` and `report changelog` generate local Markdown from recent commits in a matched repository.
+
+`report pr-summary` generates local Markdown from GitHub pull requests using the authenticated `gh` CLI.
 
 Capsule templates:
 
