@@ -132,6 +132,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "duplicates") {
+    const limit = readNumberFlag(rest, "--limit", 50);
+    const duplicateGroups = await app.duplicateRepos(limit);
+    for (const group of duplicateGroups) {
+      for (const repo of group.repositories) {
+        console.log(`${group.name}\t${repo.source}\t${repo.category}/${repo.name}\t${repo.path}`);
+      }
+    }
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -412,6 +423,7 @@ Usage:
   codemesh repo source <name> [--limit 50]
   codemesh repo local-only [--limit 50]
   codemesh repo remote-only [--limit 50]
+  codemesh repo duplicates [--limit 50]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty

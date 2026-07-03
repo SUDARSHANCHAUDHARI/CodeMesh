@@ -12,6 +12,12 @@ export interface RepositorySummary {
   byFramework: Array<{ name: string; count: number }>;
 }
 
+export interface RepositoryDuplicate {
+  name: string;
+  sources: string[];
+  repositories: RepositoryRecord[];
+}
+
 export class SqliteStore {
   constructor(private readonly dbPath: string) {}
 
@@ -161,6 +167,32 @@ export class SqliteStore {
     `);
 
     return rows.map(rowToRepositoryRecord);
+  }
+
+  async listDuplicateRepositories(limit = 50): Promise<RepositoryDuplicate[]> {
+    const repositories = await this.listRepositories(5000);
+    const groups = new Map<string, RepositoryRecord[]>();
+
+    for (const repository of repositories) {
+      const normalizedName = repository.name.trim().toLowerCase();
+      if (!normalizedName) {
+        continue;
+      }
+
+      groups.set(normalizedName, [...(groups.get(normalizedName) ?? []), repository]);
+    }
+
+    return Array.from(groups.values())
+      .map((group) => ({
+        name: group[0]?.name ?? "unknown",
+        sources: Array.from(new Set(group.map((repo) => repo.source))).sort(),
+        repositories: group.sort((left, right) => {
+          return left.source.localeCompare(right.source) || left.category.localeCompare(right.category) || left.path.localeCompare(right.path);
+        })
+      }))
+      .filter((group) => group.sources.length > 1)
+      .sort((left, right) => left.name.localeCompare(right.name))
+      .slice(0, Math.max(1, Math.floor(limit)));
   }
 
   async listDirtyRepositories(): Promise<RepositoryRecord[]> {

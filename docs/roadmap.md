@@ -26,6 +26,7 @@
 - Repo source command for provider-scoped navigation
 - `--limit` support for broad repo filter commands
 - Repo local-only and remote-only shortcuts
+- Repo duplicate detection across providers
 - Repo show command for full indexed metadata
 - Repo path command for shell workflows
 - Repo dirty command for local-change triage

@@ -39,6 +39,7 @@ pnpm dev repo framework Next.js --limit 20
 pnpm dev repo source repo-github --limit 20
 pnpm dev repo local-only --limit 20
 pnpm dev repo remote-only --limit 20
+pnpm dev repo duplicates --limit 20
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo dirty
@@ -75,6 +76,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo source <name>` lists indexed repositories by provider, such as `repo-local` or `repo-github`. Use `--limit <n>` to cap output.
 
 `repo local-only` and `repo remote-only` are shortcuts for local and GitHub provider filters.
+
+`repo duplicates` finds repository names that appear in multiple providers, such as local plus GitHub overlap.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 
