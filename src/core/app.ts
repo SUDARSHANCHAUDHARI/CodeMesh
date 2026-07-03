@@ -20,6 +20,12 @@ import { PluginRegistry } from "./plugins/plugin-registry.js";
 import { ReportService, type ReportKind } from "./reports/report-service.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
 
+export interface RepoClonePlanItem {
+  name: string;
+  sourceUrl: string;
+  destinationPath: string;
+}
+
 export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
   private readonly repoPlugin = new RepoLocalPlugin();
@@ -115,6 +121,20 @@ export class CodeMeshApp {
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
     return store.compareRepositorySources(leftSource, rightSource, limit);
+  }
+
+  async repoClonePlan(limit?: number, category = "GitHubMissing"): Promise<RepoClonePlanItem[]> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const comparison = await store.compareRepositorySources("repo-local", "repo-github", limit);
+    const destinationRoot = join(config.repoCategoriesRoot, category);
+
+    return comparison.rightOnly.map((repository) => ({
+      name: repository.name,
+      sourceUrl: repository.path,
+      destinationPath: join(destinationRoot, repository.name)
+    }));
   }
 
   async showRepo(query: string) {

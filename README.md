@@ -44,6 +44,7 @@ pnpm dev repo compare --limit 20
 pnpm dev repo compare --json
 pnpm dev repo missing-local --limit 20
 pnpm dev repo missing-remote --limit 20
+pnpm dev repo clone-plan --limit 20
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo open CodeMesh --dry-run
@@ -91,6 +92,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 Use `repo compare --json` for scripts, reports, or future automation.
 
 `repo missing-local` lists unresolved GitHub-only repositories. `repo missing-remote` lists unresolved local-only repositories.
+
+`repo clone-plan` prints a dry-run clone plan for unresolved GitHub-only repositories: repo name, source URL, and proposed local destination. It does not clone anything.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 
