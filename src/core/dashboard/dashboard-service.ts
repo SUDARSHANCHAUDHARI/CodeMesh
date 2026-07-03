@@ -6,6 +6,7 @@ import type {
   RepositorySourceComparison,
   RepositorySummary
 } from "../storage/sqlite-store.js";
+import type { GraphSummary } from "../graph/graph-service.js";
 import type { UsageSummary } from "../usage/usage-service.js";
 
 export class DashboardService {
@@ -17,6 +18,7 @@ export class DashboardService {
     duplicateRepositories: RepositoryDuplicate[];
     sourceComparison: RepositorySourceComparison;
     usageSummary: UsageSummary;
+    graphSummary?: GraphSummary;
     plugins: PluginManifest[];
   }): Promise<string> {
     const dashboardsDir = join(this.codemeshRepoPath, ".codemesh", "dashboards");
@@ -33,6 +35,7 @@ function renderDashboard(input: {
   duplicateRepositories: RepositoryDuplicate[];
   sourceComparison: RepositorySourceComparison;
   usageSummary: UsageSummary;
+  graphSummary?: GraphSummary;
   plugins: PluginManifest[];
 }): string {
   const generatedAt = new Date().toISOString();
@@ -139,6 +142,7 @@ function renderDashboard(input: {
       ${metric("Local only", input.sourceComparison.leftOnlyTotal)}
       ${metric("GitHub only", input.sourceComparison.rightOnlyTotal)}
       ${metric("Usage events", input.usageSummary.totalEvents)}
+      ${input.graphSummary ? metric("Graph nodes", input.graphSummary.nodes) : ""}
       ${metric("Active plugins", activePlugins)}
       ${metric("Planned plugins", plannedPlugins)}
     </div>
@@ -150,6 +154,7 @@ function renderDashboard(input: {
     </div>
     ${repoSection("Dirty repositories", dirtyRepos)}
     ${usageSection(input.usageSummary)}
+    ${input.graphSummary ? graphSection(input.graphSummary) : ""}
     ${sourceComparisonSection(input.sourceComparison)}
     ${duplicateSection(input.duplicateRepositories)}
     ${repoSection("Recent repositories", recentRepos)}
@@ -190,6 +195,18 @@ function repoSection(title: string, repositories: RepositoryRecord[]): string {
             <td>${escapeHtml(repo.lastCommitDate?.slice(0, 10) ?? "unknown")}</td>
           </tr>`;
         }).join("")}
+      </tbody>
+    </table>
+  </section>`;
+}
+
+function graphSection(summary: GraphSummary): string {
+  return `<section>
+    <h2>Knowledge graph</h2>
+    <table>
+      <thead><tr><th>Kind</th><th>Count</th></tr></thead>
+      <tbody>
+        ${summary.byKind.map((row) => `<tr><td>${escapeHtml(row.kind)}</td><td>${row.count}</td></tr>`).join("")}
       </tbody>
     </table>
   </section>`;

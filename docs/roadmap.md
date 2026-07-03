@@ -63,6 +63,8 @@
 - Local AI usage tracking commands
 - Usage summary report generator
 - Dashboard usage metrics
+- Local knowledge graph export, summary, and search commands
+- Dashboard knowledge graph summary
 - Local multi-agent instruction detector
 - Local Markdown knowledge provider
 - Capsule history browser

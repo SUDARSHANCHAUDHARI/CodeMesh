@@ -439,6 +439,33 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "graph" && subcommand === "generate") {
+    const graphPath = await app.generateGraph();
+    console.log(`Generated graph: ${graphPath}`);
+    return;
+  }
+
+  if (command === "graph" && subcommand === "summary") {
+    const summary = await app.graphSummary();
+    console.log(`Nodes: ${summary.nodes}`);
+    console.log(`Edges: ${summary.edges}`);
+    printGraphKindRows(summary.byKind);
+    return;
+  }
+
+  if (command === "graph" && subcommand === "search") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      throw new Error("Usage: codemesh graph search <query>");
+    }
+
+    const nodes = await app.searchGraph(query);
+    for (const node of nodes) {
+      console.log(`${node.kind}\t${node.id}\t${node.label}`);
+    }
+    return;
+  }
+
   if (command === "doctor") {
     const lines = await app.doctor();
     console.log(["CodeMesh doctor", ...lines].join("\n"));
@@ -596,6 +623,13 @@ function printUsageAgentRows(rows: Awaited<ReturnType<CodeMeshApp["usageSummary"
   }
 }
 
+function printGraphKindRows(rows: Awaited<ReturnType<CodeMeshApp["graphSummary"]>>["byKind"]): void {
+  console.log("\nBy kind");
+  for (const row of rows) {
+    console.log(`${row.count}\t${row.kind}`);
+  }
+}
+
 function shellQuote(value: string): string {
   return `'${value.replaceAll("'", "'\\''")}'`;
 }
@@ -647,6 +681,9 @@ Usage:
   codemesh usage add --agent <name> --task "<task>" [--repo <name>] [--tokens-in n] [--tokens-out n] [--cost-usd n]
   codemesh usage list [--limit 20]
   codemesh usage summary [--days 7]
+  codemesh graph generate
+  codemesh graph summary
+  codemesh graph search <query>
   codemesh doctor
 `);
 }

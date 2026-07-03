@@ -18,12 +18,13 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 - Local project, decision, architecture, prompt, and summary memory
 - Local AI usage tracking
 - Usage reports and dashboard metrics
+- Local knowledge graph export, summary, search, and dashboard metrics
 
 ## Planned
 
 - Dedicated remote repository providers for GitLab and Bitbucket
 - Dedicated Notion, NotebookLM, and GitHub Wiki providers
-- Knowledge graph dashboard
+- Richer knowledge graph visualization
 - PR summary generation from remote provider metadata
 - External plugin loading and SDK packaging
 

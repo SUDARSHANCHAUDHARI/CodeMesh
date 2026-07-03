@@ -20,6 +20,7 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Daily, weekly, release-note, and changelog reports
 - Local project, decision, architecture, prompt, and summary memory
 - Local AI usage tracking
+- Local knowledge graph export
 - Doctor health checks
 
 ## Commands
@@ -72,6 +73,9 @@ pnpm dev memory show <filename>
 pnpm dev usage add --agent Codex --repo CodeMesh --task "Plan the next task"
 pnpm dev usage list --limit 20
 pnpm dev usage summary --days 7
+pnpm dev graph generate
+pnpm dev graph summary
+pnpm dev graph search CodeMesh
 pnpm dev doctor
 ```
 
@@ -122,6 +126,8 @@ Use `repo compare --json` for scripts, reports, or future automation.
 `memory add`, `memory list`, and `memory show` manage local project, decision, architecture, prompt, and summary memory under `.codemesh/memory/`.
 
 `usage add`, `usage list`, and `usage summary` track local AI usage events under `.codemesh/usage/`.
+
+`graph generate`, `graph summary`, and `graph search` manage a local graph export under `.codemesh/graph/`.
 
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
 

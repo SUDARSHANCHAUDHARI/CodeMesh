@@ -14,6 +14,7 @@ import { LocalAgentPlugin } from "../plugins/agent-local/agent-local-plugin.js";
 import { MarkdownCapsuleRenderer } from "../plugins/capsule-markdown/markdown-capsule-renderer.js";
 import { CapsuleService } from "./capsules/capsule-service.js";
 import { DashboardService } from "./dashboard/dashboard-service.js";
+import { GraphService } from "./graph/graph-service.js";
 import { MemoryResolver } from "./memory/memory-resolver.js";
 import { MemoryService, type MemoryKind } from "./memory/memory-service.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
@@ -200,12 +201,14 @@ export class CodeMeshApp {
     await store.init();
     const dashboardService = new DashboardService(config.codemeshRepoPath);
     const usageService = new UsageService(config.codemeshRepoPath);
+    const graphService = new GraphService(config.codemeshRepoPath);
     return dashboardService.generate({
       summary: await store.repositorySummary(),
       repositories: await store.listRepositories(),
       duplicateRepositories: await store.listDuplicateRepositories(20),
       sourceComparison: await store.compareRepositorySources("repo-local", "repo-github", 10),
       usageSummary: await usageService.summary(7),
+      graphSummary: await graphService.summary().catch(() => undefined),
       plugins: this.pluginRegistry.list()
     });
   }
@@ -329,6 +332,32 @@ export class CodeMeshApp {
     const config = await this.configManager.load();
     const usageService = new UsageService(config.codemeshRepoPath);
     return usageService.summary(days);
+  }
+
+  async generateGraph(): Promise<string> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const usageService = new UsageService(config.codemeshRepoPath);
+    const memoryService = new MemoryService(config.codemeshRepoPath);
+    const graphService = new GraphService(config.codemeshRepoPath);
+    return graphService.generate({
+      repositories: await store.listRepositories(5000),
+      usageEvents: await usageService.list(5000),
+      memories: await memoryService.list()
+    });
+  }
+
+  async graphSummary() {
+    const config = await this.configManager.load();
+    const graphService = new GraphService(config.codemeshRepoPath);
+    return graphService.summary();
+  }
+
+  async searchGraph(query: string) {
+    const config = await this.configManager.load();
+    const graphService = new GraphService(config.codemeshRepoPath);
+    return graphService.search(query);
   }
 
   private async buildCapsuleInput(repoQuery: string, task: string, template: CapsuleTemplate) {
