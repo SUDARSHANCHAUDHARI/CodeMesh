@@ -46,6 +46,12 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "scan" && subcommand === "knowledge") {
+    const count = await app.scanKnowledge();
+    console.log(`Detected ${count} knowledge entries. No source files were changed.`);
+    return;
+  }
+
   if (command === "repo" && subcommand === "search") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -279,6 +285,7 @@ Usage:
   codemesh plugins list
   codemesh scan repos
   codemesh scan vault
+  codemesh scan knowledge
   codemesh repo search <query>
   codemesh repo category <name>
   codemesh repo language <name>

@@ -24,6 +24,7 @@ pnpm dev init
 pnpm dev plugins list
 pnpm dev scan repos
 pnpm dev scan vault
+pnpm dev scan knowledge
 pnpm dev repo search CodeMesh
 pnpm dev repo category AIProjects
 pnpm dev repo language Kotlin
@@ -72,6 +73,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
 
 `plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
+
+`scan knowledge` detects Obsidian knowledge plus local repository Markdown docs without writing to any source.
 
 `dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html`.
 

@@ -6,6 +6,7 @@ import { ConfigManager } from "./config/config-manager.js";
 import { SqliteStore } from "./storage/sqlite-store.js";
 import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
 import { ObsidianPlugin } from "../plugins/knowledge-obsidian/obsidian-plugin.js";
+import { MarkdownKnowledgePlugin } from "../plugins/knowledge-markdown/markdown-knowledge-plugin.js";
 import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
 import { CodexPlugin } from "../plugins/agent-codex/codex-plugin.js";
 import { LocalAgentPlugin } from "../plugins/agent-local/agent-local-plugin.js";
@@ -21,6 +22,7 @@ export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
   private readonly repoPlugin = new RepoLocalPlugin();
   private readonly knowledgePlugin = new ObsidianPlugin();
+  private readonly knowledgePlugins = [this.knowledgePlugin, new MarkdownKnowledgePlugin()];
   private readonly memoryResolver = new MemoryResolver();
   private readonly pluginRegistry = new PluginRegistry();
   private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin(), new LocalAgentPlugin()];
@@ -45,6 +47,12 @@ export class CodeMeshApp {
   async scanVault(): Promise<number> {
     const config = await this.configManager.load();
     const documents = await this.knowledgePlugin.detect(config);
+    return documents.length;
+  }
+
+  async scanKnowledge(): Promise<number> {
+    const config = await this.configManager.load();
+    const documents = (await Promise.all(this.knowledgePlugins.map((plugin) => plugin.detect(config)))).flat();
     return documents.length;
   }
 
@@ -183,7 +191,7 @@ export class CodeMeshApp {
     const knowledgeDocuments = await this.memoryResolver.resolve(
       config,
       repository,
-      await this.knowledgePlugin.detect(config)
+      (await Promise.all(this.knowledgePlugins.map((plugin) => plugin.detect(config)))).flat()
     );
     const agentProfiles = (await Promise.all(this.agentPlugins.map((plugin) => plugin.detect(config)))).flat();
 

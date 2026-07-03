@@ -16,6 +16,7 @@ The core stays small and stable. New agents, knowledge providers, repository pro
 
 - `repo-local`: discovers local Git repositories at `category/repo/.git` depth.
 - `knowledge-obsidian`: detects existing Obsidian knowledge zones without editing them.
+- `knowledge-markdown`: detects local repository Markdown documentation without editing it.
 - `agent-claude`: detects `CLAUDE.md`.
 - `agent-codex`: detects `CODEX.md` and `AGENTS.md`.
 - `agent-local`: detects local instruction files for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf.
@@ -24,7 +25,7 @@ The core stays small and stable. New agents, knowledge providers, repository pro
 ## Planned Plugin Families
 
 - Repository sources: GitHub, GitLab, Bitbucket
-- Knowledge sources: Notion, NotebookLM, Markdown, local documentation, GitHub Wiki
+- Knowledge sources: Notion, NotebookLM, GitHub Wiki, and richer local documentation providers
 - Agents: dedicated Gemini CLI, OpenCode, Aider, Amp, Cursor, Windsurf, and future coding-agent providers
 - Dashboards: active repositories, AI usage, activity, project health, repository health, knowledge graph
 - Automation: daily summaries, weekly engineering reports, release notes, changelogs, PR summaries, architecture docs

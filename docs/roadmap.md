@@ -42,6 +42,7 @@
 - Static dashboard generator
 - Daily and weekly Markdown report generator
 - Local multi-agent instruction detector
+- Local Markdown knowledge provider
 - Capsule history browser
 - Stable plugin manifest draft
 - GitHub read-only provider

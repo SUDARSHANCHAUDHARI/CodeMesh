@@ -22,6 +22,13 @@ const PLUGINS: PluginManifest[] = [
     capabilities: ["read-only", "markdown", "project-memory"]
   },
   {
+    name: "knowledge-markdown",
+    kind: "knowledge-source",
+    status: "active",
+    description: "Detects local repository Markdown documentation and agent instruction files.",
+    capabilities: ["markdown", "local-documentation", "read-only"]
+  },
+  {
     name: "agent-claude",
     kind: "agent",
     status: "active",
