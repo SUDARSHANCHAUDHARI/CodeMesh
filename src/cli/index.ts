@@ -189,6 +189,7 @@ async function run(argv: string[]): Promise<void> {
     console.log(`Total repositories: ${summary.total}`);
     console.log(`Dirty repositories: ${summary.dirty}`);
     printCountGroup("By category", summary.byCategory);
+    printCountGroup("By source", summary.bySource);
     printCountGroup("By language", summary.byLanguage);
     printCountGroup("By framework", summary.byFramework);
     return;

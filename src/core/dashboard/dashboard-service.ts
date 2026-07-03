@@ -128,6 +128,7 @@ function renderDashboard(input: {
     </div>
     <div class="grid">
       ${countSection("Repositories by category", input.summary.byCategory)}
+      ${countSection("Repositories by source", input.summary.bySource)}
       ${countSection("Repositories by language", input.summary.byLanguage)}
       ${countSection("Repositories by framework", input.summary.byFramework)}
     </div>

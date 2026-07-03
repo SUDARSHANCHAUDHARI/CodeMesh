@@ -7,6 +7,7 @@ export interface RepositorySummary {
   total: number;
   dirty: number;
   byCategory: Array<{ name: string; count: number }>;
+  bySource: Array<{ name: string; count: number }>;
   byLanguage: Array<{ name: string; count: number }>;
   byFramework: Array<{ name: string; count: number }>;
 }
@@ -196,6 +197,7 @@ export class SqliteStore {
       total: Number(totalRows[0]?.[0] ?? 0),
       dirty: Number(dirtyRows[0]?.[0] ?? 0),
       byCategory: await this.countBy("category"),
+      bySource: await this.countBy("source"),
       byLanguage: await this.countBy("primary_language"),
       byFramework: await this.countBy("framework")
     };
@@ -222,7 +224,7 @@ export class SqliteStore {
     }
   }
 
-  private async countBy(columnName: "category" | "primary_language" | "framework"): Promise<Array<{ name: string; count: number }>> {
+  private async countBy(columnName: "category" | "source" | "primary_language" | "framework"): Promise<Array<{ name: string; count: number }>> {
     const rows = await this.query(`
       SELECT coalesce(nullif(${columnName}, ''), 'unknown') AS name, COUNT(*) AS count
       FROM repositories

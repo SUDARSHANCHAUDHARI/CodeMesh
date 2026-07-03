@@ -84,7 +84,7 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 
 `repo stale --days <n>` lists indexed repositories whose last commit is older than the threshold.
 
-`repo summary` prints portfolio counts by category, language, and framework.
+`repo summary` prints portfolio counts by category, source, language, and framework.
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 

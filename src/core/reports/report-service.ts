@@ -84,6 +84,10 @@ Generated: ${new Date().toISOString()}
 
 ${countRows(input.summary.byCategory)}
 
+## Sources
+
+${countRows(input.summary.bySource)}
+
 ## Languages
 
 ${countRows(input.summary.byLanguage)}

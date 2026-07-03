@@ -31,6 +31,7 @@
 - Repo dirty command for local-change triage
 - Repo stale command for age-based project review
 - Repo summary command for portfolio counts
+- Provider/source split in summaries, dashboard, and reports
 - Doctor checks for configured paths, SQLite, capsules, and Obsidian read-only policy
 - Capsule preview command
 - Capsule history list/show commands
