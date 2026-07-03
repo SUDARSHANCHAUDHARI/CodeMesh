@@ -80,7 +80,7 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 
 `repo duplicates` finds repository names that appear in multiple providers, such as local plus GitHub overlap.
 
-`repo compare` summarizes overlap between two providers and lists limited samples of overlapping, left-only, and right-only repositories. It defaults to `repo-local` compared with `repo-github`.
+`repo compare` summarizes overlap between two providers and lists limited samples of overlapping, likely-matching, unresolved left-only, and unresolved right-only repositories. Likely matches catch name variants such as separator changes or `-main` suffixes. It defaults to `repo-local` compared with `repo-github`.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 
@@ -106,7 +106,7 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 
 `scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
 
-`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, provider overlap, recent repos, dirty repos, and plugin status.
+`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, likely matches, provider overlap, recent repos, dirty repos, and plugin status.
 
 `report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
 

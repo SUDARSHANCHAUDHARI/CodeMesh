@@ -420,12 +420,27 @@ function printRepositoryComparison(comparison: Awaited<ReturnType<CodeMeshApp["c
   console.log(`${comparison.leftSource} total: ${comparison.leftTotal}`);
   console.log(`${comparison.rightSource} total: ${comparison.rightTotal}`);
   console.log(`Overlap: ${comparison.overlapTotal}`);
+  console.log(`Likely matches: ${comparison.likelyMatchTotal}`);
   console.log(`Only ${comparison.leftSource}: ${comparison.leftOnlyTotal}`);
   console.log(`Only ${comparison.rightSource}: ${comparison.rightOnlyTotal}`);
 
   printComparisonRows(`Overlap sample`, comparison.overlap.flatMap((group) => group.repositories));
+  printLikelyMatchRows("Likely match sample", comparison.likelyMatches);
   printComparisonRows(`Only ${comparison.leftSource}`, comparison.leftOnly);
   printComparisonRows(`Only ${comparison.rightSource}`, comparison.rightOnly);
+}
+
+function printLikelyMatchRows(title: string, matches: Awaited<ReturnType<CodeMeshApp["compareRepoSources"]>>["likelyMatches"]): void {
+  console.log(`\n${title}`);
+  for (const match of matches) {
+    console.log([
+      match.matchKey,
+      match.left.source,
+      `${match.left.category}/${match.left.name}`,
+      match.right.source,
+      `${match.right.category}/${match.right.name}`
+    ].join("\t"));
+  }
 }
 
 function printComparisonRows(title: string, repositories: Awaited<ReturnType<CodeMeshApp["searchRepos"]>>): void {

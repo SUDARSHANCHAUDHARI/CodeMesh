@@ -18,6 +18,12 @@ export interface RepositoryDuplicate {
   repositories: RepositoryRecord[];
 }
 
+export interface RepositoryLikelyMatch {
+  left: RepositoryRecord;
+  right: RepositoryRecord;
+  matchKey: string;
+}
+
 export interface RepositorySourceComparison {
   leftSource: string;
   rightSource: string;
@@ -26,7 +32,9 @@ export interface RepositorySourceComparison {
   overlapTotal: number;
   leftOnlyTotal: number;
   rightOnlyTotal: number;
+  likelyMatchTotal: number;
   overlap: RepositoryDuplicate[];
+  likelyMatches: RepositoryLikelyMatch[];
   leftOnly: RepositoryRecord[];
   rightOnly: RepositoryRecord[];
 }
@@ -213,6 +221,11 @@ export class SqliteStore {
     const overlapNames = leftNames.filter((name) => rightByName.has(name));
     const leftOnlyNames = leftNames.filter((name) => !rightByName.has(name));
     const rightOnlyNames = rightNames.filter((name) => !leftByName.has(name));
+    const likelyMatches = findLikelyRepositoryMatches(leftOnlyNames, leftByName, rightOnlyNames, rightByName);
+    const likelyLeftNames = new Set(likelyMatches.map((match) => normalizeRepositoryName(match.left.name)));
+    const likelyRightNames = new Set(likelyMatches.map((match) => normalizeRepositoryName(match.right.name)));
+    const unresolvedLeftOnlyNames = leftOnlyNames.filter((name) => !likelyLeftNames.has(name));
+    const unresolvedRightOnlyNames = rightOnlyNames.filter((name) => !likelyRightNames.has(name));
     const rowLimit = Math.max(1, Math.floor(limit));
 
     return {
@@ -221,8 +234,9 @@ export class SqliteStore {
       leftTotal: leftRepositories.length,
       rightTotal: rightRepositories.length,
       overlapTotal: overlapNames.length,
-      leftOnlyTotal: leftOnlyNames.length,
-      rightOnlyTotal: rightOnlyNames.length,
+      leftOnlyTotal: unresolvedLeftOnlyNames.length,
+      rightOnlyTotal: unresolvedRightOnlyNames.length,
+      likelyMatchTotal: likelyMatches.length,
       overlap: overlapNames.slice(0, rowLimit).map((name) => {
         const repositories = [...(leftByName.get(name) ?? []), ...(rightByName.get(name) ?? [])]
           .sort(sortRepositoryRecords);
@@ -232,8 +246,9 @@ export class SqliteStore {
           repositories
         };
       }),
-      leftOnly: leftOnlyNames.slice(0, rowLimit).flatMap((name) => leftByName.get(name) ?? []).sort(sortRepositoryRecords),
-      rightOnly: rightOnlyNames.slice(0, rowLimit).flatMap((name) => rightByName.get(name) ?? []).sort(sortRepositoryRecords)
+      likelyMatches: likelyMatches.slice(0, rowLimit),
+      leftOnly: unresolvedLeftOnlyNames.slice(0, rowLimit).flatMap((name) => leftByName.get(name) ?? []).sort(sortRepositoryRecords),
+      rightOnly: unresolvedRightOnlyNames.slice(0, rowLimit).flatMap((name) => rightByName.get(name) ?? []).sort(sortRepositoryRecords)
     };
   }
 
@@ -336,7 +351,7 @@ function rowToRepositoryRecord(row: string[]): RepositoryRecord {
 function groupRepositoriesByName(repositories: RepositoryRecord[]): Map<string, RepositoryRecord[]> {
   const groups = new Map<string, RepositoryRecord[]>();
   for (const repository of repositories) {
-    const normalizedName = repository.name.trim().toLowerCase();
+    const normalizedName = normalizeRepositoryName(repository.name);
     if (!normalizedName) {
       continue;
     }
@@ -345,6 +360,59 @@ function groupRepositoriesByName(repositories: RepositoryRecord[]): Map<string, 
   }
 
   return groups;
+}
+
+function findLikelyRepositoryMatches(
+  leftOnlyNames: string[],
+  leftByName: Map<string, RepositoryRecord[]>,
+  rightOnlyNames: string[],
+  rightByName: Map<string, RepositoryRecord[]>
+): RepositoryLikelyMatch[] {
+  const rightByLikelyKey = new Map<string, RepositoryRecord[]>();
+  for (const name of rightOnlyNames) {
+    const key = likelyRepositoryKey(name);
+    if (!key) {
+      continue;
+    }
+
+    rightByLikelyKey.set(key, [
+      ...(rightByLikelyKey.get(key) ?? []),
+      ...(rightByName.get(name) ?? [])
+    ]);
+  }
+
+  const matches: RepositoryLikelyMatch[] = [];
+  const seenPairs = new Set<string>();
+  for (const name of leftOnlyNames) {
+    const matchKey = likelyRepositoryKey(name);
+    const leftRepositories = leftByName.get(name) ?? [];
+    const rightRepositories = rightByLikelyKey.get(matchKey) ?? [];
+    for (const left of leftRepositories) {
+      for (const right of rightRepositories) {
+        const pairKey = `${left.id}\t${right.id}`;
+        if (seenPairs.has(pairKey)) {
+          continue;
+        }
+
+        seenPairs.add(pairKey);
+        matches.push({ left, right, matchKey });
+      }
+    }
+  }
+
+  return matches.sort((left, right) => {
+    return left.left.name.localeCompare(right.left.name) || left.right.name.localeCompare(right.right.name);
+  });
+}
+
+function likelyRepositoryKey(name: string): string {
+  return normalizeRepositoryName(name)
+    .replace(/(?:^|[-_\s.])(main|master|repo|repository|app)$/u, "")
+    .replace(/[^a-z0-9]/gu, "");
+}
+
+function normalizeRepositoryName(name: string): string {
+  return name.trim().toLowerCase();
 }
 
 function sortRepositoryRecords(left: RepositoryRecord, right: RepositoryRecord): number {

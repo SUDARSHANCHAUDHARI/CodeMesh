@@ -132,6 +132,7 @@ function renderDashboard(input: {
       ${metric("Clean", clean)}
       ${metric("Dirty", input.summary.dirty)}
       ${metric("Overlaps", input.sourceComparison.overlapTotal)}
+      ${metric("Likely matches", input.sourceComparison.likelyMatchTotal)}
       ${metric("Local only", input.sourceComparison.leftOnlyTotal)}
       ${metric("GitHub only", input.sourceComparison.rightOnlyTotal)}
       ${metric("Active plugins", activePlugins)}
@@ -196,11 +197,28 @@ function sourceComparisonSection(comparison: RepositorySourceComparison): string
       <thead><tr><th>Group</th><th>Count</th><th>Sample</th></tr></thead>
       <tbody>
         ${comparisonRow("Overlap", comparison.overlapTotal, comparison.overlap.flatMap((group) => group.repositories))}
+        ${likelyMatchRow("Likely matches", comparison.likelyMatchTotal, comparison.likelyMatches)}
         ${comparisonRow(`Only ${comparison.leftSource}`, comparison.leftOnlyTotal, comparison.leftOnly)}
         ${comparisonRow(`Only ${comparison.rightSource}`, comparison.rightOnlyTotal, comparison.rightOnly)}
       </tbody>
     </table>
   </section>`;
+}
+
+function likelyMatchRow(
+  label: string,
+  count: number,
+  matches: RepositorySourceComparison["likelyMatches"]
+): string {
+  const sample = matches
+    .map((match) => escapeHtml(`${match.left.category}/${match.left.name} -> ${match.right.category}/${match.right.name}`))
+    .join("<br>");
+
+  return `<tr>
+    <td>${escapeHtml(label)}</td>
+    <td>${count}</td>
+    <td>${sample}</td>
+  </tr>`;
 }
 
 function comparisonRow(label: string, count: number, repositories: RepositoryRecord[]): string {
