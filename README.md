@@ -23,6 +23,8 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Local project, decision, architecture, prompt, and summary memory
 - Local AI usage tracking
 - Local knowledge graph export
+- Local plugin manifest validation
+- Local automation command plans
 - Doctor health checks
 
 ## Commands
@@ -32,6 +34,7 @@ pnpm install
 pnpm build
 pnpm dev init
 pnpm dev plugins list
+pnpm dev plugins validate
 pnpm dev scan repos
 pnpm dev scan github
 pnpm dev scan gitlab
@@ -80,6 +83,7 @@ pnpm dev usage summary --days 7
 pnpm dev graph generate
 pnpm dev graph summary
 pnpm dev graph search CodeMesh
+pnpm dev automation plan daily
 pnpm dev doctor
 ```
 
@@ -133,9 +137,13 @@ Use `repo compare --json` for scripts, reports, or future automation.
 
 `graph generate`, `graph summary`, and `graph search` manage a local graph export under `.codemesh/graph/`.
 
+`automation plan daily|weekly` prints local command plans for recurring workflows. It does not schedule anything.
+
 `doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
 
 `plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
+
+`plugins validate` checks optional local plugin manifests under `.codemesh/plugins/*.json`.
 
 `scan knowledge` detects Obsidian knowledge, local repository Markdown docs, and optional local imports without writing to any source.
 

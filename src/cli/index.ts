@@ -29,9 +29,24 @@ async function run(argv: string[]): Promise<void> {
   }
 
   if (command === "plugins" && subcommand === "list") {
-    const plugins = app.listPlugins();
+    const plugins = await app.listPlugins();
     for (const plugin of plugins) {
       console.log(`${plugin.status}\t${plugin.kind}\t${plugin.name}\t${plugin.capabilities.join(",")}`);
+    }
+    return;
+  }
+
+  if (command === "plugins" && subcommand === "validate") {
+    const validations = await app.validateLocalPlugins();
+    if (validations.length === 0) {
+      console.log("No local plugin manifests found.");
+      return;
+    }
+
+    for (const validation of validations) {
+      const status = validation.errors.length === 0 ? "PASS" : "FAIL";
+      const detail = validation.errors.join("; ") || validation.manifest?.name || "valid";
+      console.log(`${status}\t${validation.path}\t${detail}`);
     }
     return;
   }
@@ -451,6 +466,19 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "automation" && subcommand === "plan") {
+    const kind = rest[0];
+    if (kind !== "daily" && kind !== "weekly") {
+      throw new Error("Usage: codemesh automation plan daily|weekly");
+    }
+
+    const plan = app.automationCommandPlan(kind);
+    for (const commandLine of plan.commands) {
+      console.log(commandLine);
+    }
+    return;
+  }
+
   if (command === "graph" && subcommand === "generate") {
     const graphPath = await app.generateGraph();
     console.log(`Generated graph: ${graphPath}`);
@@ -652,6 +680,7 @@ function printHelp(): void {
 Usage:
   codemesh init
   codemesh plugins list
+  codemesh plugins validate
   codemesh scan repos
   codemesh scan github
   codemesh scan gitlab
@@ -698,6 +727,7 @@ Usage:
   codemesh graph generate
   codemesh graph summary
   codemesh graph search <query>
+  codemesh automation plan daily|weekly
   codemesh doctor
 `);
 }

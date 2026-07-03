@@ -8,5 +8,6 @@ dist/
 .codemesh/memory/*.md
 .codemesh/usage/*.jsonl
 .codemesh/graph/*.json
+.codemesh/plugins/*.json
 *.log
 .DS_Store

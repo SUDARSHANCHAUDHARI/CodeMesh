@@ -2,6 +2,7 @@ import { access } from "node:fs/promises";
 import { constants } from "node:fs";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
+import { AutomationService, type AutomationPlanKind } from "./automation/automation-service.js";
 import { ConfigManager } from "./config/config-manager.js";
 import { SqliteStore } from "./storage/sqlite-store.js";
 import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
@@ -20,6 +21,7 @@ import { DashboardService } from "./dashboard/dashboard-service.js";
 import { GraphService } from "./graph/graph-service.js";
 import { MemoryResolver } from "./memory/memory-resolver.js";
 import { MemoryService, type MemoryKind } from "./memory/memory-service.js";
+import { LocalPluginService } from "./plugins/local-plugin-service.js";
 import { PluginRegistry } from "./plugins/plugin-registry.js";
 import { ReportService, type ReportKind } from "./reports/report-service.js";
 import { UsageService, type UsageEventInput } from "./usage/usage-service.js";
@@ -47,8 +49,20 @@ export class CodeMeshApp {
     return this.configManager.init();
   }
 
-  listPlugins() {
-    return this.pluginRegistry.list();
+  async listPlugins() {
+    const config = await this.configManager.load();
+    const localPluginService = new LocalPluginService(config.codemeshRepoPath);
+    return [...this.pluginRegistry.list(), ...await localPluginService.list()];
+  }
+
+  async validateLocalPlugins() {
+    const config = await this.configManager.load();
+    const localPluginService = new LocalPluginService(config.codemeshRepoPath);
+    return localPluginService.validate();
+  }
+
+  automationCommandPlan(kind: AutomationPlanKind) {
+    return new AutomationService().commandPlan(kind);
   }
 
   async scanRepos(): Promise<number> {
@@ -232,7 +246,7 @@ export class CodeMeshApp {
       sourceComparison: await store.compareRepositorySources("repo-local", "repo-github", 10),
       usageSummary: await usageService.summary(7),
       graphSummary: await graphService.summary().catch(() => undefined),
-      plugins: this.pluginRegistry.list()
+      plugins: await this.listPlugins()
     });
   }
 
@@ -248,7 +262,7 @@ export class CodeMeshApp {
       summary: await store.repositorySummary(),
       dirtyRepositories: await store.listDirtyRepositories(),
       staleRepositories: await store.listStaleRepositories(staleThreshold),
-      plugins: this.pluginRegistry.list()
+      plugins: await this.listPlugins()
     });
   }
 

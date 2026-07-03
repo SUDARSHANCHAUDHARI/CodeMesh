@@ -143,15 +143,15 @@ const PLUGINS: PluginManifest[] = [
   {
     name: "dashboard-local",
     kind: "dashboard",
-    status: "planned",
+    status: "active",
     description: "Local static dashboard for repository and activity health.",
     capabilities: ["local-html", "repository-health", "project-health"]
   },
   {
     name: "automation-reports",
     kind: "automation",
-    status: "planned",
-    description: "Local daily summaries, weekly reports, release notes, changelogs, and PR summaries.",
-    capabilities: ["markdown-reports", "local-first", "no-cloud-required"]
+    status: "active",
+    description: "Local command plans for summaries, reports, release notes, changelogs, and PR summaries.",
+    capabilities: ["command-plans", "markdown-reports", "local-first", "no-cloud-required"]
   }
 ];

@@ -22,13 +22,15 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 - Local AI usage tracking
 - Usage reports and dashboard metrics
 - Local knowledge graph export, summary, search, and dashboard metrics
+- Local plugin manifest validation
+- Local automation command plans
 
 ## Planned
 
 - Live Notion, NotebookLM, and GitHub Wiki sync providers
 - Richer knowledge graph visualization
 - PR summary generation from remote provider metadata
-- External plugin loading and SDK packaging
+- External plugin code loading and SDK packaging
 
 ## Boundaries
 
