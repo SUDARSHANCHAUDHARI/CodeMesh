@@ -93,6 +93,15 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "stale") {
+    const days = readNumberFlag(rest, "--days", 30);
+    const repositories = await app.staleRepos(days);
+    for (const repo of repositories) {
+      console.log(`${repo.lastCommitDate?.slice(0, 10) ?? "no-commit"}\t${repo.category}/${repo.name}\t${repo.currentBranch ?? "no-branch"}\t${repo.path}`);
+    }
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -163,6 +172,20 @@ function readTemplate(args: string[]): CapsuleTemplate {
   throw new Error("Invalid template. Use one of: neutral, codex, claude");
 }
 
+function readNumberFlag(args: string[], name: string, defaultValue: number): number {
+  const value = readFlag(args, name);
+  if (value === undefined) {
+    return defaultValue;
+  }
+
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 1) {
+    throw new Error(`${name} must be a positive number.`);
+  }
+
+  return parsed;
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -173,6 +196,7 @@ Usage:
   codemesh repo search <query>
   codemesh repo show <query>
   codemesh repo dirty
+  codemesh repo stale [--days 30]
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

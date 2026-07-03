@@ -60,6 +60,14 @@ export class CodeMeshApp {
     return store.listDirtyRepositories();
   }
 
+  async staleRepos(days: number) {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const threshold = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    return store.listStaleRepositories(threshold);
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);

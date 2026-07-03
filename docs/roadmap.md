@@ -21,6 +21,7 @@
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
 - Repo show command for full indexed metadata
 - Repo dirty command for local-change triage
+- Repo stale command for age-based project review
 - Capsule preview command
 - Capsule history list/show commands
 - Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths

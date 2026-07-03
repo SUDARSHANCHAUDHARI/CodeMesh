@@ -105,6 +105,20 @@ export class SqliteStore {
     return rows.map(rowToRepositoryRecord);
   }
 
+  async listStaleRepositories(thresholdIsoDate: string): Promise<RepositoryRecord[]> {
+    const rows = await this.query(`
+      SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
+      FROM repositories
+      WHERE last_commit_date IS NOT NULL
+        AND last_commit_date != ''
+        AND last_commit_date < ${toSqlValue(thresholdIsoDate)}
+      ORDER BY last_commit_date ASC, category, name
+      LIMIT 100;
+    `);
+
+    return rows.map(rowToRepositoryRecord);
+  }
+
   async exec(sql: string): Promise<void> {
     await runSqlite(this.dbPath, sql);
   }
