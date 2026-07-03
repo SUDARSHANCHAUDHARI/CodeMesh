@@ -32,6 +32,7 @@
 - JSON output for repo provider comparison
 - Missing-local and missing-remote repo shortcuts
 - Dry-run clone plan for unresolved GitHub-only repositories
+- Reviewable shell commands for clone plans
 - Repo show command for full indexed metadata
 - Repo path command for shell workflows
 - Repo open command for local path and URL navigation

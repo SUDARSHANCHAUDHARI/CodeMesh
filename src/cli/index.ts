@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { dirname } from "node:path";
 import { CodeMeshApp } from "../core/app.js";
 import type { MemoryKind } from "../core/memory/memory-service.js";
 import type { CapsuleTemplate } from "../core/plugins/types.js";
@@ -175,6 +176,11 @@ async function run(argv: string[]): Promise<void> {
     const limit = readNumberFlag(rest, "--limit", 50);
     const category = readFlag(rest, "--category") ?? "GitHubMissing";
     const rows = await app.repoClonePlan(limit, category);
+    if (hasFlag(rest, "--commands")) {
+      printCloneCommands(rows);
+      return;
+    }
+
     for (const row of rows) {
       console.log(`${row.name}\t${row.sourceUrl}\t${row.destinationPath}`);
     }
@@ -514,6 +520,13 @@ function printComparisonRows(title: string, repositories: Awaited<ReturnType<Cod
   }
 }
 
+function printCloneCommands(rows: Awaited<ReturnType<CodeMeshApp["repoClonePlan"]>>): void {
+  for (const row of rows) {
+    console.log(`mkdir -p ${shellQuote(dirname(row.destinationPath))}`);
+    console.log(`git clone ${shellQuote(row.sourceUrl)} ${shellQuote(row.destinationPath)}`);
+  }
+}
+
 function shellQuote(value: string): string {
   return `'${value.replaceAll("'", "'\\''")}'`;
 }
@@ -539,7 +552,7 @@ Usage:
   codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20] [--json]
   codemesh repo missing-local [--limit 50]
   codemesh repo missing-remote [--limit 50]
-  codemesh repo clone-plan [--limit 50] [--category GitHubMissing]
+  codemesh repo clone-plan [--limit 50] [--category GitHubMissing] [--commands]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo open <query> [--dry-run]
