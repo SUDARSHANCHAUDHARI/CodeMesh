@@ -57,6 +57,13 @@ export class CodeMeshApp {
     return store.listRepositoriesByLanguage(language);
   }
 
+  async frameworkRepos(framework: string) {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    return store.listRepositoriesByFramework(framework);
+  }
+
   async showRepo(query: string) {
     const repositories = await this.searchRepos(query);
     const repository = repositories[0];

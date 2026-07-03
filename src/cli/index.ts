@@ -71,6 +71,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "framework") {
+    const framework = rest.join(" ").trim();
+    if (!framework) {
+      throw new Error("Usage: codemesh repo framework <name>");
+    }
+
+    const repositories = await app.frameworkRepos(framework);
+    printRepositoryRows(repositories);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -239,6 +250,7 @@ Usage:
   codemesh repo search <query>
   codemesh repo category <name>
   codemesh repo language <name>
+  codemesh repo framework <name>
   codemesh repo show <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]
