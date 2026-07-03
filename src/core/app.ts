@@ -158,6 +158,7 @@ export class CodeMeshApp {
       summary: await store.repositorySummary(),
       repositories: await store.listRepositories(),
       duplicateRepositories: await store.listDuplicateRepositories(20),
+      sourceComparison: await store.compareRepositorySources("repo-local", "repo-github", 10),
       plugins: this.pluginRegistry.list()
     });
   }

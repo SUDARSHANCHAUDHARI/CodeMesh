@@ -1,7 +1,11 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { PluginManifest, RepositoryRecord } from "../plugins/types.js";
-import type { RepositoryDuplicate, RepositorySummary } from "../storage/sqlite-store.js";
+import type {
+  RepositoryDuplicate,
+  RepositorySourceComparison,
+  RepositorySummary
+} from "../storage/sqlite-store.js";
 
 export class DashboardService {
   constructor(private readonly codemeshRepoPath: string) {}
@@ -10,6 +14,7 @@ export class DashboardService {
     summary: RepositorySummary;
     repositories: RepositoryRecord[];
     duplicateRepositories: RepositoryDuplicate[];
+    sourceComparison: RepositorySourceComparison;
     plugins: PluginManifest[];
   }): Promise<string> {
     const dashboardsDir = join(this.codemeshRepoPath, ".codemesh", "dashboards");
@@ -24,6 +29,7 @@ function renderDashboard(input: {
   summary: RepositorySummary;
   repositories: RepositoryRecord[];
   duplicateRepositories: RepositoryDuplicate[];
+  sourceComparison: RepositorySourceComparison;
   plugins: PluginManifest[];
 }): string {
   const generatedAt = new Date().toISOString();
@@ -125,7 +131,9 @@ function renderDashboard(input: {
       ${metric("Repositories", input.summary.total)}
       ${metric("Clean", clean)}
       ${metric("Dirty", input.summary.dirty)}
-      ${metric("Shown overlaps", input.duplicateRepositories.length)}
+      ${metric("Overlaps", input.sourceComparison.overlapTotal)}
+      ${metric("Local only", input.sourceComparison.leftOnlyTotal)}
+      ${metric("GitHub only", input.sourceComparison.rightOnlyTotal)}
       ${metric("Active plugins", activePlugins)}
       ${metric("Planned plugins", plannedPlugins)}
     </div>
@@ -136,6 +144,7 @@ function renderDashboard(input: {
       ${countSection("Repositories by framework", input.summary.byFramework)}
     </div>
     ${repoSection("Dirty repositories", dirtyRepos)}
+    ${sourceComparisonSection(input.sourceComparison)}
     ${duplicateSection(input.duplicateRepositories)}
     ${repoSection("Recent repositories", recentRepos)}
     ${pluginSection(input.plugins)}
@@ -178,6 +187,28 @@ function repoSection(title: string, repositories: RepositoryRecord[]): string {
       </tbody>
     </table>
   </section>`;
+}
+
+function sourceComparisonSection(comparison: RepositorySourceComparison): string {
+  return `<section>
+    <h2>Local and GitHub comparison</h2>
+    <table>
+      <thead><tr><th>Group</th><th>Count</th><th>Sample</th></tr></thead>
+      <tbody>
+        ${comparisonRow("Overlap", comparison.overlapTotal, comparison.overlap.flatMap((group) => group.repositories))}
+        ${comparisonRow(`Only ${comparison.leftSource}`, comparison.leftOnlyTotal, comparison.leftOnly)}
+        ${comparisonRow(`Only ${comparison.rightSource}`, comparison.rightOnlyTotal, comparison.rightOnly)}
+      </tbody>
+    </table>
+  </section>`;
+}
+
+function comparisonRow(label: string, count: number, repositories: RepositoryRecord[]): string {
+  return `<tr>
+    <td>${escapeHtml(label)}</td>
+    <td>${count}</td>
+    <td>${repositories.map((repo) => escapeHtml(`${repo.category}/${repo.name}`)).join("<br>")}</td>
+  </tr>`;
 }
 
 function duplicateSection(duplicateRepositories: RepositoryDuplicate[]): string {
