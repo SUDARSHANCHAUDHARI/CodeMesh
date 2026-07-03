@@ -112,51 +112,51 @@ export class SqliteStore {
     return rows.map(rowToRepositoryRecord);
   }
 
-  async listRepositoriesByCategory(category: string): Promise<RepositoryRecord[]> {
+  async listRepositoriesByCategory(category: string, limit = 250): Promise<RepositoryRecord[]> {
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
       FROM repositories
       WHERE lower(category) = ${toSqlValue(category.toLowerCase())}
       ORDER BY name
-      LIMIT 250;
+      LIMIT ${toSqlLimit(limit)};
     `);
 
     return rows.map(rowToRepositoryRecord);
   }
 
-  async listRepositoriesByLanguage(language: string): Promise<RepositoryRecord[]> {
+  async listRepositoriesByLanguage(language: string, limit = 250): Promise<RepositoryRecord[]> {
     const normalizedLanguage = language.toLowerCase() === "unknown" ? "" : language.toLowerCase();
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
       FROM repositories
       WHERE lower(coalesce(primary_language, '')) = ${toSqlValue(normalizedLanguage)}
       ORDER BY category, name
-      LIMIT 250;
+      LIMIT ${toSqlLimit(limit)};
     `);
 
     return rows.map(rowToRepositoryRecord);
   }
 
-  async listRepositoriesByFramework(framework: string): Promise<RepositoryRecord[]> {
+  async listRepositoriesByFramework(framework: string, limit = 250): Promise<RepositoryRecord[]> {
     const normalizedFramework = framework.toLowerCase() === "unknown" ? "" : framework.toLowerCase();
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
       FROM repositories
       WHERE lower(coalesce(framework, '')) = ${toSqlValue(normalizedFramework)}
       ORDER BY category, name
-      LIMIT 250;
+      LIMIT ${toSqlLimit(limit)};
     `);
 
     return rows.map(rowToRepositoryRecord);
   }
 
-  async listRepositoriesBySource(source: string): Promise<RepositoryRecord[]> {
+  async listRepositoriesBySource(source: string, limit = 250): Promise<RepositoryRecord[]> {
     const rows = await this.query(`
       SELECT id, name, path, category, source, primary_language, framework, package_manager, current_branch, has_changes, changed_file_count, last_commit_date, active_status, last_seen_at
       FROM repositories
       WHERE lower(source) = ${toSqlValue(source.toLowerCase())}
       ORDER BY category, name
-      LIMIT 1000;
+      LIMIT ${toSqlLimit(limit)};
     `);
 
     return rows.map(rowToRepositoryRecord);
@@ -263,6 +263,10 @@ function toSqlValue(value: string | null): string {
   }
 
   return `'${value.replaceAll("'", "''")}'`;
+}
+
+function toSqlLimit(value: number): string {
+  return String(Math.max(1, Math.floor(value)));
 }
 
 function runSqlite(dbPath: string, sql: string): Promise<string> {

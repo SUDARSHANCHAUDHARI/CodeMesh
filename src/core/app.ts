@@ -75,32 +75,32 @@ export class CodeMeshApp {
     return store.searchRepositories(query);
   }
 
-  async categoryRepos(category: string) {
+  async categoryRepos(category: string, limit?: number) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
-    return store.listRepositoriesByCategory(category);
+    return store.listRepositoriesByCategory(category, limit);
   }
 
-  async languageRepos(language: string) {
+  async languageRepos(language: string, limit?: number) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
-    return store.listRepositoriesByLanguage(language);
+    return store.listRepositoriesByLanguage(language, limit);
   }
 
-  async frameworkRepos(framework: string) {
+  async frameworkRepos(framework: string, limit?: number) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
-    return store.listRepositoriesByFramework(framework);
+    return store.listRepositoriesByFramework(framework, limit);
   }
 
-  async sourceRepos(source: string) {
+  async sourceRepos(source: string, limit?: number) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
-    return store.listRepositoriesBySource(source);
+    return store.listRepositoriesBySource(source, limit);
   }
 
   async showRepo(query: string) {

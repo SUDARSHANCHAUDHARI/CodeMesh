@@ -33,10 +33,10 @@ pnpm dev scan github
 pnpm dev scan vault
 pnpm dev scan knowledge
 pnpm dev repo search CodeMesh
-pnpm dev repo category AIProjects
-pnpm dev repo language Kotlin
-pnpm dev repo framework Next.js
-pnpm dev repo source repo-github
+pnpm dev repo category AIProjects --limit 20
+pnpm dev repo language Kotlin --limit 20
+pnpm dev repo framework Next.js --limit 20
+pnpm dev repo source repo-github --limit 20
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo dirty
@@ -63,13 +63,13 @@ pnpm dev doctor
 category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
 ```
 
-`repo category <name>` lists indexed repositories in an exact category, case-insensitively.
+`repo category <name>` lists indexed repositories in an exact category, case-insensitively. Use `--limit <n>` to cap output.
 
-`repo language <name>` lists indexed repositories by detected language. Use `unknown` for repos without a detected primary language.
+`repo language <name>` lists indexed repositories by detected language. Use `unknown` for repos without a detected primary language. Use `--limit <n>` to cap output.
 
-`repo framework <name>` lists indexed repositories by detected framework. Use `unknown` for repos without a detected framework.
+`repo framework <name>` lists indexed repositories by detected framework. Use `unknown` for repos without a detected framework. Use `--limit <n>` to cap output.
 
-`repo source <name>` lists indexed repositories by provider, such as `repo-local` or `repo-github`.
+`repo source <name>` lists indexed repositories by provider, such as `repo-local` or `repo-github`. Use `--limit <n>` to cap output.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 

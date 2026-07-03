@@ -71,45 +71,49 @@ async function run(argv: string[]): Promise<void> {
   }
 
   if (command === "repo" && subcommand === "category") {
-    const category = rest.join(" ").trim();
+    const category = positionalArgs(rest).join(" ").trim();
+    const limit = readNumberFlag(rest, "--limit", 50);
     if (!category) {
-      throw new Error("Usage: codemesh repo category <name>");
+      throw new Error("Usage: codemesh repo category <name> [--limit 50]");
     }
 
-    const repositories = await app.categoryRepos(category);
+    const repositories = await app.categoryRepos(category, limit);
     printRepositoryRows(repositories);
     return;
   }
 
   if (command === "repo" && subcommand === "language") {
-    const language = rest.join(" ").trim();
+    const language = positionalArgs(rest).join(" ").trim();
+    const limit = readNumberFlag(rest, "--limit", 50);
     if (!language) {
-      throw new Error("Usage: codemesh repo language <name>");
+      throw new Error("Usage: codemesh repo language <name> [--limit 50]");
     }
 
-    const repositories = await app.languageRepos(language);
+    const repositories = await app.languageRepos(language, limit);
     printRepositoryRows(repositories);
     return;
   }
 
   if (command === "repo" && subcommand === "framework") {
-    const framework = rest.join(" ").trim();
+    const framework = positionalArgs(rest).join(" ").trim();
+    const limit = readNumberFlag(rest, "--limit", 50);
     if (!framework) {
-      throw new Error("Usage: codemesh repo framework <name>");
+      throw new Error("Usage: codemesh repo framework <name> [--limit 50]");
     }
 
-    const repositories = await app.frameworkRepos(framework);
+    const repositories = await app.frameworkRepos(framework, limit);
     printRepositoryRows(repositories);
     return;
   }
 
   if (command === "repo" && subcommand === "source") {
-    const source = rest.join(" ").trim();
+    const source = positionalArgs(rest).join(" ").trim();
+    const limit = readNumberFlag(rest, "--limit", 50);
     if (!source) {
-      throw new Error("Usage: codemesh repo source <name>");
+      throw new Error("Usage: codemesh repo source <name> [--limit 50]");
     }
 
-    const repositories = await app.sourceRepos(source);
+    const repositories = await app.sourceRepos(source, limit);
     printRepositoryRows(repositories);
     return;
   }
@@ -324,6 +328,23 @@ function readNumberFlag(args: string[], name: string, defaultValue: number): num
   return parsed;
 }
 
+function positionalArgs(args: string[]): string[] {
+  const positional: string[] = [];
+  for (let index = 0; index < args.length; index += 1) {
+    const value = args[index];
+    if (value?.startsWith("--")) {
+      index += 1;
+      continue;
+    }
+
+    if (value) {
+      positional.push(value);
+    }
+  }
+
+  return positional;
+}
+
 function printCountGroup(title: string, rows: Array<{ name: string; count: number }>): void {
   console.log(`\n${title}`);
   for (const row of rows) {
@@ -358,10 +379,10 @@ Usage:
   codemesh scan vault
   codemesh scan knowledge
   codemesh repo search <query>
-  codemesh repo category <name>
-  codemesh repo language <name>
-  codemesh repo framework <name>
-  codemesh repo source <name>
+  codemesh repo category <name> [--limit 50]
+  codemesh repo language <name> [--limit 50]
+  codemesh repo framework <name> [--limit 50]
+  codemesh repo source <name> [--limit 50]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty
