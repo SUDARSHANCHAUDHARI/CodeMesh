@@ -41,6 +41,7 @@ pnpm dev repo local-only --limit 20
 pnpm dev repo remote-only --limit 20
 pnpm dev repo duplicates --limit 20
 pnpm dev repo compare --limit 20
+pnpm dev repo compare --json
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo dirty
@@ -81,6 +82,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo duplicates` finds repository names that appear in multiple providers, such as local plus GitHub overlap.
 
 `repo compare` summarizes overlap between two providers and lists limited samples of overlapping, likely-matching, unresolved left-only, and unresolved right-only repositories. Likely matches catch name variants such as separator changes or `-main` suffixes. It defaults to `repo-local` compared with `repo-github`.
+
+Use `repo compare --json` for scripts, reports, or future automation.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 

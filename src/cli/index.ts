@@ -148,6 +148,11 @@ async function run(argv: string[]): Promise<void> {
     const rightSource = readFlag(rest, "--right") ?? "repo-github";
     const limit = readNumberFlag(rest, "--limit", 20);
     const comparison = await app.compareRepoSources(leftSource, rightSource, limit);
+    if (hasFlag(rest, "--json")) {
+      console.log(JSON.stringify(comparison, null, 2));
+      return;
+    }
+
     printRepositoryComparison(comparison);
     return;
   }
@@ -343,6 +348,10 @@ function readFlag(args: string[], name: string): string | undefined {
   return args[index + 1];
 }
 
+function hasFlag(args: string[], name: string): boolean {
+  return args.includes(name);
+}
+
 function readTemplate(args: string[]): CapsuleTemplate {
   const value = readFlag(args, "--template") ?? "neutral";
   if (value === "neutral" || value === "codex" || value === "claude") {
@@ -468,7 +477,7 @@ Usage:
   codemesh repo local-only [--limit 50]
   codemesh repo remote-only [--limit 50]
   codemesh repo duplicates [--limit 50]
-  codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20]
+  codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20] [--json]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty
