@@ -110,6 +110,13 @@ export class CodeMeshApp {
     return store.listDuplicateRepositories(limit);
   }
 
+  async compareRepoSources(leftSource?: string, rightSource?: string, limit?: number) {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    return store.compareRepositorySources(leftSource, rightSource, limit);
+  }
+
   async showRepo(query: string) {
     const repositories = await this.searchRepos(query);
     const repository = repositories[0];

@@ -40,6 +40,7 @@ pnpm dev repo source repo-github --limit 20
 pnpm dev repo local-only --limit 20
 pnpm dev repo remote-only --limit 20
 pnpm dev repo duplicates --limit 20
+pnpm dev repo compare --limit 20
 pnpm dev repo show CodeMesh
 pnpm dev repo path GitGet
 pnpm dev repo dirty
@@ -78,6 +79,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo local-only` and `repo remote-only` are shortcuts for local and GitHub provider filters.
 
 `repo duplicates` finds repository names that appear in multiple providers, such as local plus GitHub overlap.
+
+`repo compare` summarizes overlap between two providers and lists limited samples of overlapping, left-only, and right-only repositories. It defaults to `repo-local` compared with `repo-github`.
 
 `repo show <query>` prints the full indexed metadata for the first matching repository.
 

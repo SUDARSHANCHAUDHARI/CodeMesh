@@ -18,6 +18,19 @@ export interface RepositoryDuplicate {
   repositories: RepositoryRecord[];
 }
 
+export interface RepositorySourceComparison {
+  leftSource: string;
+  rightSource: string;
+  leftTotal: number;
+  rightTotal: number;
+  overlapTotal: number;
+  leftOnlyTotal: number;
+  rightOnlyTotal: number;
+  overlap: RepositoryDuplicate[];
+  leftOnly: RepositoryRecord[];
+  rightOnly: RepositoryRecord[];
+}
+
 export class SqliteStore {
   constructor(private readonly dbPath: string) {}
 
@@ -171,28 +184,57 @@ export class SqliteStore {
 
   async listDuplicateRepositories(limit = 50): Promise<RepositoryDuplicate[]> {
     const repositories = await this.listRepositories(5000);
-    const groups = new Map<string, RepositoryRecord[]>();
-
-    for (const repository of repositories) {
-      const normalizedName = repository.name.trim().toLowerCase();
-      if (!normalizedName) {
-        continue;
-      }
-
-      groups.set(normalizedName, [...(groups.get(normalizedName) ?? []), repository]);
-    }
+    const groups = groupRepositoriesByName(repositories);
 
     return Array.from(groups.values())
       .map((group) => ({
         name: group[0]?.name ?? "unknown",
         sources: Array.from(new Set(group.map((repo) => repo.source))).sort(),
-        repositories: group.sort((left, right) => {
-          return left.source.localeCompare(right.source) || left.category.localeCompare(right.category) || left.path.localeCompare(right.path);
-        })
+        repositories: group.sort(sortRepositoryRecords)
       }))
       .filter((group) => group.sources.length > 1)
       .sort((left, right) => left.name.localeCompare(right.name))
       .slice(0, Math.max(1, Math.floor(limit)));
+  }
+
+  async compareRepositorySources(
+    leftSource = "repo-local",
+    rightSource = "repo-github",
+    limit = 50
+  ): Promise<RepositorySourceComparison> {
+    const normalizedLeftSource = leftSource.toLowerCase();
+    const normalizedRightSource = rightSource.toLowerCase();
+    const leftRepositories = await this.listRepositoriesBySource(normalizedLeftSource, 5000);
+    const rightRepositories = await this.listRepositoriesBySource(normalizedRightSource, 5000);
+    const leftByName = groupRepositoriesByName(leftRepositories);
+    const rightByName = groupRepositoriesByName(rightRepositories);
+    const leftNames = Array.from(leftByName.keys()).sort();
+    const rightNames = Array.from(rightByName.keys()).sort();
+    const overlapNames = leftNames.filter((name) => rightByName.has(name));
+    const leftOnlyNames = leftNames.filter((name) => !rightByName.has(name));
+    const rightOnlyNames = rightNames.filter((name) => !leftByName.has(name));
+    const rowLimit = Math.max(1, Math.floor(limit));
+
+    return {
+      leftSource: normalizedLeftSource,
+      rightSource: normalizedRightSource,
+      leftTotal: leftRepositories.length,
+      rightTotal: rightRepositories.length,
+      overlapTotal: overlapNames.length,
+      leftOnlyTotal: leftOnlyNames.length,
+      rightOnlyTotal: rightOnlyNames.length,
+      overlap: overlapNames.slice(0, rowLimit).map((name) => {
+        const repositories = [...(leftByName.get(name) ?? []), ...(rightByName.get(name) ?? [])]
+          .sort(sortRepositoryRecords);
+        return {
+          name: repositories[0]?.name ?? name,
+          sources: Array.from(new Set(repositories.map((repo) => repo.source))).sort(),
+          repositories
+        };
+      }),
+      leftOnly: leftOnlyNames.slice(0, rowLimit).flatMap((name) => leftByName.get(name) ?? []).sort(sortRepositoryRecords),
+      rightOnly: rightOnlyNames.slice(0, rowLimit).flatMap((name) => rightByName.get(name) ?? []).sort(sortRepositoryRecords)
+    };
   }
 
   async listDirtyRepositories(): Promise<RepositoryRecord[]> {
@@ -289,6 +331,28 @@ function rowToRepositoryRecord(row: string[]): RepositoryRecord {
     activeStatus: (row[12] as RepositoryRecord["activeStatus"]) || "unknown",
     lastSeenAt: row[13] ?? ""
   };
+}
+
+function groupRepositoriesByName(repositories: RepositoryRecord[]): Map<string, RepositoryRecord[]> {
+  const groups = new Map<string, RepositoryRecord[]>();
+  for (const repository of repositories) {
+    const normalizedName = repository.name.trim().toLowerCase();
+    if (!normalizedName) {
+      continue;
+    }
+
+    groups.set(normalizedName, [...(groups.get(normalizedName) ?? []), repository]);
+  }
+
+  return groups;
+}
+
+function sortRepositoryRecords(left: RepositoryRecord, right: RepositoryRecord): number {
+  return (
+    left.source.localeCompare(right.source)
+    || left.category.localeCompare(right.category)
+    || left.path.localeCompare(right.path)
+  );
 }
 
 function toSqlValue(value: string | null): string {

@@ -27,6 +27,7 @@
 - `--limit` support for broad repo filter commands
 - Repo local-only and remote-only shortcuts
 - Repo duplicate detection across providers
+- Repo provider comparison with overlap and missing-side counts
 - Repo show command for full indexed metadata
 - Repo path command for shell workflows
 - Repo dirty command for local-change triage

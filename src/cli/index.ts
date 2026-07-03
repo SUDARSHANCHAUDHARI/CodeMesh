@@ -143,6 +143,15 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "compare") {
+    const leftSource = readFlag(rest, "--left") ?? "repo-local";
+    const rightSource = readFlag(rest, "--right") ?? "repo-github";
+    const limit = readNumberFlag(rest, "--limit", 20);
+    const comparison = await app.compareRepoSources(leftSource, rightSource, limit);
+    printRepositoryComparison(comparison);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -406,6 +415,26 @@ function printRepositoryRows(repositories: Awaited<ReturnType<CodeMeshApp["searc
   }
 }
 
+function printRepositoryComparison(comparison: Awaited<ReturnType<CodeMeshApp["compareRepoSources"]>>): void {
+  console.log(`Sources: ${comparison.leftSource} <-> ${comparison.rightSource}`);
+  console.log(`${comparison.leftSource} total: ${comparison.leftTotal}`);
+  console.log(`${comparison.rightSource} total: ${comparison.rightTotal}`);
+  console.log(`Overlap: ${comparison.overlapTotal}`);
+  console.log(`Only ${comparison.leftSource}: ${comparison.leftOnlyTotal}`);
+  console.log(`Only ${comparison.rightSource}: ${comparison.rightOnlyTotal}`);
+
+  printComparisonRows(`Overlap sample`, comparison.overlap.flatMap((group) => group.repositories));
+  printComparisonRows(`Only ${comparison.leftSource}`, comparison.leftOnly);
+  printComparisonRows(`Only ${comparison.rightSource}`, comparison.rightOnly);
+}
+
+function printComparisonRows(title: string, repositories: Awaited<ReturnType<CodeMeshApp["searchRepos"]>>): void {
+  console.log(`\n${title}`);
+  for (const repo of repositories) {
+    console.log(`${repo.source}\t${repo.category}/${repo.name}\t${repo.path}`);
+  }
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -424,6 +453,7 @@ Usage:
   codemesh repo local-only [--limit 50]
   codemesh repo remote-only [--limit 50]
   codemesh repo duplicates [--limit 50]
+  codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty
