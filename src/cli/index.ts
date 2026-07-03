@@ -157,6 +157,20 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "missing-local") {
+    const limit = readNumberFlag(rest, "--limit", 50);
+    const comparison = await app.compareRepoSources("repo-local", "repo-github", limit);
+    printComparisonRows("Missing locally", comparison.rightOnly);
+    return;
+  }
+
+  if (command === "repo" && subcommand === "missing-remote") {
+    const limit = readNumberFlag(rest, "--limit", 50);
+    const comparison = await app.compareRepoSources("repo-local", "repo-github", limit);
+    printComparisonRows("Missing on GitHub", comparison.leftOnly);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -513,6 +527,8 @@ Usage:
   codemesh repo remote-only [--limit 50]
   codemesh repo duplicates [--limit 50]
   codemesh repo compare [--left repo-local] [--right repo-github] [--limit 20] [--json]
+  codemesh repo missing-local [--limit 50]
+  codemesh repo missing-remote [--limit 50]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo open <query> [--dry-run]

@@ -30,6 +30,7 @@
 - Repo provider comparison with overlap and missing-side counts
 - Likely repo matching for local/GitHub name variants
 - JSON output for repo provider comparison
+- Missing-local and missing-remote repo shortcuts
 - Repo show command for full indexed metadata
 - Repo path command for shell workflows
 - Repo open command for local path and URL navigation
