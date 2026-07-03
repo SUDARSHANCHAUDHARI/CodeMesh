@@ -2,10 +2,12 @@
 
 CodeMesh is a local-first AI developer workspace for coordinating repositories, Obsidian knowledge, and coding agents.
 
-## v0.2 Scope
+## v0.3 Scope
 
 - Single TypeScript CLI app
+- First-party plugin registry
 - Category-based local repository discovery
+- Local Markdown knowledge discovery
 - Top-level repo discovery under the repo category root
 - SQLite index stored at `.codemesh/index.sqlite`
 - Read-only Obsidian structure detection
@@ -13,6 +15,9 @@ CodeMesh is a local-first AI developer workspace for coordinating repositories, 
 - Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf instruction detection
 - Markdown context capsules saved under `.codemesh/capsules/`
 - Repo portfolio navigation commands
+- Local dashboard generation
+- Daily, weekly, release-note, and changelog reports
+- Local project, decision, architecture, prompt, and summary memory
 - Doctor health checks
 
 ## Commands

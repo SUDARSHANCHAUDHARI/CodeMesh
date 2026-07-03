@@ -38,6 +38,7 @@
 ## v0.3
 
 - First-party plugin registry and `plugins list`
+- Future vision status doc
 - Local dashboard
 - Static dashboard generator
 - Daily and weekly Markdown report generator

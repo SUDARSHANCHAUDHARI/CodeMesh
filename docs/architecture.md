@@ -4,6 +4,8 @@ CodeMesh is a local-first TypeScript CLI that coordinates local repositories, kn
 
 The core stays small and stable. New agents, knowledge providers, repository providers, dashboards, and automations are represented as plugins. The current implementation uses first-party in-process plugins; external plugin loading should be added only after the local plugin contracts settle.
 
+See `docs/future-vision-status.md` for the active versus planned future-vision boundary.
+
 ## Core Modules
 
 - `config`: loads local paths and scan settings.
