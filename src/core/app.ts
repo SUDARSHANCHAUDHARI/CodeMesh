@@ -150,6 +150,7 @@ export class CodeMeshApp {
     return dashboardService.generate({
       summary: await store.repositorySummary(),
       repositories: await store.listRepositories(),
+      duplicateRepositories: await store.listDuplicateRepositories(20),
       plugins: this.pluginRegistry.list()
     });
   }

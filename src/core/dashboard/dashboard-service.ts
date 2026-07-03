@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { PluginManifest, RepositoryRecord } from "../plugins/types.js";
-import type { RepositorySummary } from "../storage/sqlite-store.js";
+import type { RepositoryDuplicate, RepositorySummary } from "../storage/sqlite-store.js";
 
 export class DashboardService {
   constructor(private readonly codemeshRepoPath: string) {}
@@ -9,6 +9,7 @@ export class DashboardService {
   async generate(input: {
     summary: RepositorySummary;
     repositories: RepositoryRecord[];
+    duplicateRepositories: RepositoryDuplicate[];
     plugins: PluginManifest[];
   }): Promise<string> {
     const dashboardsDir = join(this.codemeshRepoPath, ".codemesh", "dashboards");
@@ -22,6 +23,7 @@ export class DashboardService {
 function renderDashboard(input: {
   summary: RepositorySummary;
   repositories: RepositoryRecord[];
+  duplicateRepositories: RepositoryDuplicate[];
   plugins: PluginManifest[];
 }): string {
   const generatedAt = new Date().toISOString();
@@ -123,6 +125,7 @@ function renderDashboard(input: {
       ${metric("Repositories", input.summary.total)}
       ${metric("Clean", clean)}
       ${metric("Dirty", input.summary.dirty)}
+      ${metric("Shown overlaps", input.duplicateRepositories.length)}
       ${metric("Active plugins", activePlugins)}
       ${metric("Planned plugins", plannedPlugins)}
     </div>
@@ -133,6 +136,7 @@ function renderDashboard(input: {
       ${countSection("Repositories by framework", input.summary.byFramework)}
     </div>
     ${repoSection("Dirty repositories", dirtyRepos)}
+    ${duplicateSection(input.duplicateRepositories)}
     ${repoSection("Recent repositories", recentRepos)}
     ${pluginSection(input.plugins)}
   </main>
@@ -171,6 +175,22 @@ function repoSection(title: string, repositories: RepositoryRecord[]): string {
             <td>${escapeHtml(repo.lastCommitDate?.slice(0, 10) ?? "unknown")}</td>
           </tr>`;
         }).join("")}
+      </tbody>
+    </table>
+  </section>`;
+}
+
+function duplicateSection(duplicateRepositories: RepositoryDuplicate[]): string {
+  return `<section>
+    <h2>Repository provider overlap</h2>
+    <table>
+      <thead><tr><th>Repo</th><th>Sources</th><th>Locations</th></tr></thead>
+      <tbody>
+        ${duplicateRepositories.map((group) => `<tr>
+          <td>${escapeHtml(group.name)}</td>
+          <td>${escapeHtml(group.sources.join(", "))}</td>
+          <td>${group.repositories.map((repo) => escapeHtml(`${repo.category}/${repo.name}: ${repo.path}`)).join("<br>")}</td>
+        </tr>`).join("")}
       </tbody>
     </table>
   </section>`;

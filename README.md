@@ -103,7 +103,7 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 
 `scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
 
-`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html`.
+`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, provider overlap, recent repos, dirty repos, and plugin status.
 
 `report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
 
