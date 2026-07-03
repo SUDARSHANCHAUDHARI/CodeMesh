@@ -41,6 +41,12 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "scan" && subcommand === "github") {
+    const count = await app.scanGitHubRepos();
+    console.log(`Indexed ${count} GitHub repositories.`);
+    return;
+  }
+
   if (command === "scan" && subcommand === "vault") {
     const count = await app.scanVault();
     console.log(`Detected ${count} Obsidian knowledge entries. No vault files were changed.`);
@@ -337,6 +343,7 @@ Usage:
   codemesh init
   codemesh plugins list
   codemesh scan repos
+  codemesh scan github
   codemesh scan vault
   codemesh scan knowledge
   codemesh repo search <query>

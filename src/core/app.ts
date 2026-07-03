@@ -5,6 +5,7 @@ import { spawn } from "node:child_process";
 import { ConfigManager } from "./config/config-manager.js";
 import { SqliteStore } from "./storage/sqlite-store.js";
 import { RepoLocalPlugin } from "../plugins/repo-local/repo-local-plugin.js";
+import { GitHubRepoPlugin } from "../plugins/repo-github/github-repo-plugin.js";
 import { ObsidianPlugin } from "../plugins/knowledge-obsidian/obsidian-plugin.js";
 import { MarkdownKnowledgePlugin } from "../plugins/knowledge-markdown/markdown-knowledge-plugin.js";
 import { ClaudePlugin } from "../plugins/agent-claude/claude-plugin.js";
@@ -22,6 +23,7 @@ import type { CapsuleTemplate } from "./plugins/types.js";
 export class CodeMeshApp {
   private readonly configManager = new ConfigManager();
   private readonly repoPlugin = new RepoLocalPlugin();
+  private readonly githubRepoPlugin = new GitHubRepoPlugin();
   private readonly knowledgePlugin = new ObsidianPlugin();
   private readonly knowledgePlugins = [this.knowledgePlugin, new MarkdownKnowledgePlugin()];
   private readonly memoryResolver = new MemoryResolver();
@@ -41,6 +43,15 @@ export class CodeMeshApp {
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
     await store.init();
     const repositories = await this.repoPlugin.discover(config);
+    await store.saveRepositories(repositories);
+    return repositories.length;
+  }
+
+  async scanGitHubRepos(): Promise<number> {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    const repositories = await this.githubRepoPlugin.discover(config);
     await store.saveRepositories(repositories);
     return repositories.length;
   }

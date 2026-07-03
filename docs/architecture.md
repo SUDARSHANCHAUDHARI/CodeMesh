@@ -17,6 +17,7 @@ See `docs/future-vision-status.md` for the active versus planned future-vision b
 ## First-Party Internal Plugins
 
 - `repo-local`: discovers local Git repositories at `category/repo/.git` depth.
+- `repo-github`: discovers GitHub repository metadata through the authenticated `gh` CLI.
 - `knowledge-obsidian`: detects existing Obsidian knowledge zones without editing them.
 - `knowledge-markdown`: detects local repository Markdown documentation without editing it.
 - `agent-claude`: detects `CLAUDE.md`.
@@ -26,7 +27,7 @@ See `docs/future-vision-status.md` for the active versus planned future-vision b
 
 ## Planned Plugin Families
 
-- Repository sources: GitHub, GitLab, Bitbucket
+- Repository sources: GitLab and Bitbucket
 - Knowledge sources: Notion, NotebookLM, GitHub Wiki, and richer local documentation providers
 - Agents: dedicated Gemini CLI, OpenCode, Aider, Amp, Cursor, Windsurf, and future coding-agent providers
 - Dashboards: active repositories, AI usage, activity, project health, repository health, knowledge graph

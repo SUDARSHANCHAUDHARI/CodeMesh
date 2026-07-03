@@ -39,6 +39,7 @@
 
 - First-party plugin registry and `plugins list`
 - Future vision status doc
+- Optional read-only GitHub repository provider
 - Local dashboard
 - Static dashboard generator
 - Daily and weekly Markdown report generator

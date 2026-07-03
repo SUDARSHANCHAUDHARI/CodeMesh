@@ -52,9 +52,9 @@ const PLUGINS: PluginManifest[] = [
   {
     name: "repo-github",
     kind: "repository-source",
-    status: "planned",
+    status: "active",
     description: "Read-only GitHub repository metadata provider.",
-    capabilities: ["github", "remote-metadata", "private-repos"]
+    capabilities: ["github", "gh-cli", "remote-metadata", "private-repos"]
   },
   {
     name: "repo-gitlab",

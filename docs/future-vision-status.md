@@ -6,6 +6,7 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 
 - First-party plugin registry
 - Local Git repository discovery
+- Optional read-only GitHub repository discovery through `gh`
 - Obsidian read-only detection
 - Local Markdown documentation detection
 - Claude and Codex instruction detection
@@ -18,7 +19,7 @@ CodeMesh is now a local-first foundation for the future vision. The implemented 
 
 ## Planned
 
-- Dedicated remote repository providers for GitHub, GitLab, and Bitbucket
+- Dedicated remote repository providers for GitLab and Bitbucket
 - Dedicated Notion, NotebookLM, and GitHub Wiki providers
 - Richer AI usage tracking
 - Knowledge graph dashboard
