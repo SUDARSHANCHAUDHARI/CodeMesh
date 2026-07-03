@@ -23,6 +23,8 @@ pnpm dev scan vault
 pnpm dev repo search CodeMesh
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
+pnpm dev capsule list
+pnpm dev capsule show <filename>
 pnpm dev doctor
 ```
 
@@ -33,6 +35,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 ```
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
+
+`capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
 
 Capsule templates:
 

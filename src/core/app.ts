@@ -59,6 +59,18 @@ export class CodeMeshApp {
     return capsuleService.preview(capsuleInput);
   }
 
+  async listCapsules() {
+    const config = await this.configManager.load();
+    const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
+    return capsuleService.list();
+  }
+
+  async showCapsule(filename: string): Promise<string> {
+    const config = await this.configManager.load();
+    const capsuleService = new CapsuleService(config.codemeshRepoPath, new MarkdownCapsuleRenderer());
+    return capsuleService.show(filename);
+  }
+
   private async buildCapsuleInput(repoQuery: string, task: string, template: CapsuleTemplate) {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));

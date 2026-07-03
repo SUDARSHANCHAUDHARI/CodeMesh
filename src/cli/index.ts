@@ -86,6 +86,24 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "capsule" && subcommand === "list") {
+    const capsules = await app.listCapsules();
+    for (const capsule of capsules) {
+      console.log(`${capsule.createdAt}\t${capsule.repositoryName}\t${capsule.filename}`);
+    }
+    return;
+  }
+
+  if (command === "capsule" && subcommand === "show") {
+    const filename = rest[0];
+    if (!filename) {
+      throw new Error("Usage: codemesh capsule show <filename>");
+    }
+
+    console.log(await app.showCapsule(filename));
+    return;
+  }
+
   if (command === "doctor") {
     const lines = await app.doctor();
     console.log(["CodeMesh doctor", ...lines].join("\n"));
@@ -123,6 +141,8 @@ Usage:
   codemesh repo search <query>
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
+  codemesh capsule list
+  codemesh capsule show <filename>
   codemesh doctor
 `);
 }

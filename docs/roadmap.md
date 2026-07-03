@@ -20,6 +20,7 @@
 - Git branch/status indexing for selected repos
 - Search output with language, framework, package manager, branch, dirty status, and last commit date
 - Capsule preview command
+- Capsule history list/show commands
 - Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths
 - Capsule templates for `neutral`, `codex`, and `claude`
 - Project memory resolver
