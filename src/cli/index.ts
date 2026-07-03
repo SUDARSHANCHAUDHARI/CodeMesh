@@ -203,6 +203,17 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "cd") {
+    const query = rest.join(" ").trim();
+    if (!query) {
+      throw new Error("Usage: codemesh repo cd <query>");
+    }
+
+    const target = await app.localRepoPath(query);
+    console.log(`cd ${shellQuote(target)}`);
+    return;
+  }
+
   if (command === "repo" && subcommand === "dirty") {
     const repositories = await app.dirtyRepos();
     for (const repo of repositories) {
@@ -479,6 +490,10 @@ function printComparisonRows(title: string, repositories: Awaited<ReturnType<Cod
   }
 }
 
+function shellQuote(value: string): string {
+  return `'${value.replaceAll("'", "'\\''")}'`;
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -501,6 +516,7 @@ Usage:
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo open <query> [--dry-run]
+  codemesh repo cd <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]
   codemesh repo summary

@@ -141,6 +141,16 @@ export class CodeMeshApp {
     return repository.path;
   }
 
+  async localRepoPath(query: string): Promise<string> {
+    const repositories = await this.searchRepos(query);
+    const repository = repositories.find((repo) => repo.source === "repo-local");
+    if (!repository) {
+      throw new Error(`No local repository matched query: ${query}`);
+    }
+
+    return repository.path;
+  }
+
   async dirtyRepos() {
     const config = await this.configManager.load();
     const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
