@@ -68,6 +68,13 @@ export class CodeMeshApp {
     return store.listStaleRepositories(threshold);
   }
 
+  async repoSummary() {
+    const config = await this.configManager.load();
+    const store = new SqliteStore(join(config.codemeshRepoPath, ".codemesh", "index.sqlite"));
+    await store.init();
+    return store.repositorySummary();
+  }
+
   async createCapsule(repoQuery: string, task: string, template: CapsuleTemplate = "neutral"): Promise<string> {
     const config = await this.configManager.load();
     const capsuleInput = await this.buildCapsuleInput(repoQuery, task, template);

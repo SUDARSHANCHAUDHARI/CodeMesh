@@ -102,6 +102,16 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "summary") {
+    const summary = await app.repoSummary();
+    console.log(`Total repositories: ${summary.total}`);
+    console.log(`Dirty repositories: ${summary.dirty}`);
+    printCountGroup("By category", summary.byCategory);
+    printCountGroup("By language", summary.byLanguage);
+    printCountGroup("By framework", summary.byFramework);
+    return;
+  }
+
   if (command === "capsule" && subcommand === "create") {
     const repo = readFlag(rest, "--repo");
     const task = readFlag(rest, "--task");
@@ -186,6 +196,13 @@ function readNumberFlag(args: string[], name: string, defaultValue: number): num
   return parsed;
 }
 
+function printCountGroup(title: string, rows: Array<{ name: string; count: number }>): void {
+  console.log(`\n${title}`);
+  for (const row of rows) {
+    console.log(`${row.count}\t${row.name}`);
+  }
+}
+
 function printHelp(): void {
   console.log(`CodeMesh
 
@@ -197,6 +214,7 @@ Usage:
   codemesh repo show <query>
   codemesh repo dirty
   codemesh repo stale [--days 30]
+  codemesh repo summary
   codemesh capsule create --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule preview --repo <query> --task "<task>" [--template neutral|codex|claude]
   codemesh capsule list

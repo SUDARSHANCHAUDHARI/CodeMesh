@@ -3,6 +3,14 @@ import { dirname } from "node:path";
 import { spawn } from "node:child_process";
 import type { RepositoryRecord } from "../plugins/types.js";
 
+export interface RepositorySummary {
+  total: number;
+  dirty: number;
+  byCategory: Array<{ name: string; count: number }>;
+  byLanguage: Array<{ name: string; count: number }>;
+  byFramework: Array<{ name: string; count: number }>;
+}
+
 export class SqliteStore {
   constructor(private readonly dbPath: string) {}
 
@@ -119,6 +127,19 @@ export class SqliteStore {
     return rows.map(rowToRepositoryRecord);
   }
 
+  async repositorySummary(): Promise<RepositorySummary> {
+    const totalRows = await this.query("SELECT COUNT(*) FROM repositories;");
+    const dirtyRows = await this.query("SELECT COUNT(*) FROM repositories WHERE has_changes = 1;");
+
+    return {
+      total: Number(totalRows[0]?.[0] ?? 0),
+      dirty: Number(dirtyRows[0]?.[0] ?? 0),
+      byCategory: await this.countBy("category"),
+      byLanguage: await this.countBy("primary_language"),
+      byFramework: await this.countBy("framework")
+    };
+  }
+
   async exec(sql: string): Promise<void> {
     await runSqlite(this.dbPath, sql);
   }
@@ -138,6 +159,21 @@ export class SqliteStore {
     if (!hasColumn) {
       await this.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnType};`);
     }
+  }
+
+  private async countBy(columnName: "category" | "primary_language" | "framework"): Promise<Array<{ name: string; count: number }>> {
+    const rows = await this.query(`
+      SELECT coalesce(nullif(${columnName}, ''), 'unknown') AS name, COUNT(*) AS count
+      FROM repositories
+      GROUP BY 1
+      ORDER BY count DESC, name
+      LIMIT 25;
+    `);
+
+    return rows.map((row) => ({
+      name: row[0] ?? "unknown",
+      count: Number(row[1] ?? 0)
+    }));
   }
 }
 

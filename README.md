@@ -24,6 +24,7 @@ pnpm dev repo search CodeMesh
 pnpm dev repo show CodeMesh
 pnpm dev repo dirty
 pnpm dev repo stale --days 30
+pnpm dev repo summary
 pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
 pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
 pnpm dev capsule list
@@ -42,6 +43,8 @@ category/name    language | framework | package-manager | branch | clean/dirty |
 `repo dirty` lists indexed repositories with local changes, sorted by changed file count.
 
 `repo stale --days <n>` lists indexed repositories whose last commit is older than the threshold.
+
+`repo summary` prints portfolio counts by category, language, and framework.
 
 `capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
 
