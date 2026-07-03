@@ -118,6 +118,20 @@ async function run(argv: string[]): Promise<void> {
     return;
   }
 
+  if (command === "repo" && subcommand === "local-only") {
+    const limit = readNumberFlag(rest, "--limit", 50);
+    const repositories = await app.sourceRepos("repo-local", limit);
+    printRepositoryRows(repositories);
+    return;
+  }
+
+  if (command === "repo" && subcommand === "remote-only") {
+    const limit = readNumberFlag(rest, "--limit", 50);
+    const repositories = await app.sourceRepos("repo-github", limit);
+    printRepositoryRows(repositories);
+    return;
+  }
+
   if (command === "repo" && subcommand === "show") {
     const query = rest.join(" ").trim();
     if (!query) {
@@ -383,6 +397,8 @@ Usage:
   codemesh repo language <name> [--limit 50]
   codemesh repo framework <name> [--limit 50]
   codemesh repo source <name> [--limit 50]
+  codemesh repo local-only [--limit 50]
+  codemesh repo remote-only [--limit 50]
   codemesh repo show <query>
   codemesh repo path <query>
   codemesh repo dirty
