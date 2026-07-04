@@ -16,7 +16,7 @@ CodeMesh is useful if you:
 
 ## Status
 
-CodeMesh is currently a public-beta candidate. The core CLI is usable from source, but the external plugin SDK and hosted/cloud features are intentionally not part of the current release.
+CodeMesh is currently a `0.4.0` public beta candidate. The core CLI is usable from source, but the external plugin SDK and hosted/cloud features are intentionally not part of the current release.
 
 ## Local-First Promise
 

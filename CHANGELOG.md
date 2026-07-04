@@ -4,9 +4,9 @@ All notable user-facing changes are documented here.
 
 ## Unreleased
 
-- Prepare public beta release candidate.
+- No unreleased changes yet.
 
-## 0.4.0 - Public Beta
+## 0.4.0 - Public Beta - 2026-07-04
 
 - Added public install, configuration, command, privacy, security, and contribution documentation.
 - Added portable config initialization for non-Sudarshan workspaces.

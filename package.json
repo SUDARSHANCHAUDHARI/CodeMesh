@@ -1,6 +1,6 @@
 {
   "name": "codemesh",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Local-first AI developer workspace for repositories, knowledge, and coding agents.",
   "private": true,
   "license": "MIT",
