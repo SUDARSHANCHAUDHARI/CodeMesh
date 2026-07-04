@@ -33,6 +33,9 @@
     "dist",
     "README.md",
     "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
     "docs",
     "examples"
   ],
