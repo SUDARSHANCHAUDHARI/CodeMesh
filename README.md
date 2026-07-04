@@ -130,6 +130,8 @@ node dist/cli/index.js dashboard generate
 - [Architecture](docs/architecture.md)
 - [Roadmap](docs/roadmap.md)
 - [Plugin manifest draft](docs/plugin-sdk.md)
+- [NPM publishing decision](docs/decisions/npm-publishing.md)
+- [External plugin SDK boundary](docs/decisions/external-plugin-sdk-boundary.md)
 
 ## Development
 

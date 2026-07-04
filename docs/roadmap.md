@@ -31,7 +31,8 @@
 - Fresh-clone validation on macOS and Linux.
 - More focused tests around config, repository discovery, and capsule generation.
 - Better dashboard screenshots or terminal recordings.
-- Clear npm publishing decision.
+- More provider tests around remote metadata and local imports.
+- Fresh-clone validation across macOS and Linux.
 
 ## Later
 

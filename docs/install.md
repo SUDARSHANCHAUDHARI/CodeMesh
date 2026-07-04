@@ -55,5 +55,8 @@ Warnings mean an optional local path is not present yet. Fix warnings before usi
 ```sh
 pnpm build
 pnpm typecheck
+pnpm test
 pnpm test:smoke
 ```
+
+Fresh-clone validation notes live in [fresh-clone-validation.md](fresh-clone-validation.md).

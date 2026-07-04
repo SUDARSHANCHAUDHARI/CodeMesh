@@ -27,5 +27,7 @@ jobs:
         run: pnpm build
       - name: Typecheck
         run: pnpm typecheck
+      - name: Unit tests
+        run: pnpm test
       - name: Smoke test
         run: pnpm test:smoke

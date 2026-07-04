@@ -4,11 +4,11 @@ This backlog tracks non-blocking work after the `0.4.0` public beta.
 
 ## v1.0 Hardening
 
-- Validate fresh-clone setup on macOS and Linux.
-- Add focused tests for config initialization, repository discovery, and capsule generation.
-- Decide whether CodeMesh should be published to npm.
+- Repeat fresh-clone setup on a non-CI Linux machine before claiming broader platform support.
+- Add more provider tests around GitHub, GitLab, Bitbucket, and local imports.
 - Add screenshots or terminal recordings after the command docs settle.
-- Review external plugin SDK scope before adding external code loading.
+- Keep npm publishing source-run only for `0.4.x`; revisit using `docs/decisions/npm-publishing.md`.
+- Keep external plugin code loading out before v1.0; revisit using `docs/decisions/external-plugin-sdk-boundary.md`.
 
 ## Product Polish
 
