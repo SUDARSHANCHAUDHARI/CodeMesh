@@ -1,11 +1,41 @@
 {
   "name": "codemesh",
   "version": "0.3.0",
+  "description": "Local-first AI developer workspace for repositories, knowledge, and coding agents.",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "bin": {
     "codemesh": "./dist/cli/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SUDARSHANCHAUDHARI/CodeMesh.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SUDARSHANCHAUDHARI/CodeMesh/issues"
+  },
+  "homepage": "https://github.com/SUDARSHANCHAUDHARI/CodeMesh#readme",
+  "keywords": [
+    "local-first",
+    "cli",
+    "typescript",
+    "ai-tools",
+    "developer-tools",
+    "obsidian",
+    "knowledge-graph",
+    "github-cli"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs",
+    "examples"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "pnpm build && node dist/cli/index.js",
