@@ -1,204 +1,145 @@
 # CodeMesh
 
-CodeMesh is a local-first AI developer workspace for coordinating repositories, Obsidian knowledge, and coding agents.
+CodeMesh is a local-first AI developer workspace for people who manage many repositories, notes, and coding agents.
 
-## v0.3 Scope
+It indexes local Git repositories, reads existing knowledge sources, detects agent instruction files, and generates portable context capsules for tools like Codex and Claude. It keeps generated data in your local checkout under `.codemesh/`.
 
-- Single TypeScript CLI app
-- First-party plugin registry
-- Category-based local repository discovery
-- Optional read-only GitHub repository discovery through `gh`
-- Optional read-only GitLab and Bitbucket repository discovery through environment tokens
-- Local Markdown knowledge discovery
-- Optional local imports for Notion, NotebookLM, and GitHub Wiki exports
-- Top-level repo discovery under the repo category root
-- SQLite index stored at `.codemesh/index.sqlite`
-- Read-only Obsidian structure detection
-- Claude/Codex instruction detection
-- Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf instruction detection
-- Markdown context capsules saved under `.codemesh/capsules/`
-- Repo portfolio navigation commands
-- Local dashboard generation
-- Daily, weekly, release-note, and changelog reports
-- Local project, decision, architecture, prompt, and summary memory
-- Local AI usage tracking
-- Local knowledge graph export
-- Local plugin manifest validation
-- Local automation command plans
-- Doctor health checks
+## Who It Is For
 
-## Commands
+CodeMesh is useful if you:
+
+- work across dozens or hundreds of repositories
+- organize repos by category folders
+- keep engineering notes in Obsidian or Markdown
+- use multiple coding agents
+- want quick repo search, local reports, and context handoffs without a cloud dependency
+
+## Status
+
+CodeMesh is currently a public-beta candidate. The core CLI is usable from source, but the external plugin SDK and hosted/cloud features are intentionally not part of the current release.
+
+## Local-First Promise
+
+- Normal use does not require a cloud service.
+- Obsidian integration is read-only.
+- Generated capsules, reports, dashboards, memory, usage logs, and graph files stay under `.codemesh/`.
+- GitHub, GitLab, and Bitbucket scans are optional and read-only.
+- CodeMesh does not store access tokens in its config.
+
+See [docs/privacy.md](docs/privacy.md) for details.
+
+## Requirements
+
+- Node.js 20 or newer
+- pnpm
+- git
+- sqlite3
+- GitHub CLI only if you use `scan github` or PR summaries
+
+## Install From Source
 
 ```sh
+git clone https://github.com/SUDARSHANCHAUDHARI/CodeMesh.git
+cd CodeMesh
 pnpm install
 pnpm build
-pnpm dev init
-pnpm dev plugins list
-pnpm dev plugins validate
-pnpm dev scan repos
-pnpm dev scan github
-pnpm dev scan gitlab
-pnpm dev scan bitbucket
-pnpm dev scan vault
-pnpm dev scan knowledge
-pnpm dev repo search CodeMesh
-pnpm dev repo category AIProjects --limit 20
-pnpm dev repo language Kotlin --limit 20
-pnpm dev repo framework Next.js --limit 20
-pnpm dev repo source repo-github --limit 20
-pnpm dev repo local-only --limit 20
-pnpm dev repo remote-only --limit 20
-pnpm dev repo duplicates --limit 20
-pnpm dev repo compare --limit 20
-pnpm dev repo compare --json
-pnpm dev repo missing-local --limit 20
-pnpm dev repo missing-remote --limit 20
-pnpm dev repo clone-plan --limit 20
-pnpm dev repo clone-plan --limit 5 --commands
-pnpm dev repo show CodeMesh
-pnpm dev repo path GitGet
-pnpm dev repo open CodeMesh --dry-run
-pnpm dev repo cd CodeMesh
-pnpm dev repo dirty
-pnpm dev repo stale --days 30
-pnpm dev repo summary
-pnpm dev dashboard generate
-pnpm dev report daily
-pnpm dev report weekly
-pnpm dev report release-notes --repo CodeMesh
-pnpm dev report changelog --repo CodeMesh
-pnpm dev report pr-summary --repo CodeMesh
-pnpm dev report repo-comparison
-pnpm dev report usage-summary --days 7
-pnpm dev capsule preview --repo CodeMesh --task "Plan the next task" --template codex
-pnpm dev capsule create --repo CodeMesh --task "Plan the next task" --template neutral
-pnpm dev capsule list
-pnpm dev capsule show <filename>
-pnpm dev memory add --type decision --repo CodeMesh --text "Keep Obsidian read-only."
-pnpm dev memory list
-pnpm dev memory show <filename>
-pnpm dev usage add --agent Codex --repo CodeMesh --task "Plan the next task"
-pnpm dev usage list --limit 20
-pnpm dev usage summary --days 7
-pnpm dev graph generate
-pnpm dev graph summary
-pnpm dev graph search CodeMesh
-pnpm dev automation plan daily
+node dist/cli/index.js --help
+```
+
+Optional shell alias:
+
+```sh
+alias codemesh="node /path/to/CodeMesh/dist/cli/index.js"
+```
+
+## Quickstart
+
+Create a local config:
+
+```sh
+node dist/cli/index.js init \
+  --repo-root /Users/you/code \
+  --obsidian-vault /Users/you/notes/ObsidianVault \
+  --codemesh-root /Users/you/code/CodeMesh \
+  --github-owner your-github-user
+```
+
+Check your setup:
+
+```sh
+node dist/cli/index.js doctor
+```
+
+Index local repositories:
+
+```sh
+node dist/cli/index.js scan repos
+```
+
+Search your portfolio:
+
+```sh
+node dist/cli/index.js repo search my-app
+```
+
+Create a context capsule:
+
+```sh
+node dist/cli/index.js capsule create --repo my-app --task "Plan the next change" --template codex
+```
+
+## Common Workflows
+
+Find repositories quickly:
+
+```sh
+node dist/cli/index.js repo search CodeMesh
+node dist/cli/index.js repo category AIProjects --limit 20
+node dist/cli/index.js repo dirty
+node dist/cli/index.js repo stale --days 30
+```
+
+Compare local and remote repository lists:
+
+```sh
+node dist/cli/index.js scan github
+node dist/cli/index.js repo compare
+node dist/cli/index.js repo clone-plan --commands
+```
+
+Generate local reports:
+
+```sh
+node dist/cli/index.js report daily
+node dist/cli/index.js report weekly
+node dist/cli/index.js report repo-comparison
+```
+
+Generate a local dashboard:
+
+```sh
+node dist/cli/index.js dashboard generate
+```
+
+## Documentation
+
+- [Install](docs/install.md)
+- [Configuration](docs/configuration.md)
+- [Commands](docs/commands.md)
+- [Privacy](docs/privacy.md)
+- [Architecture](docs/architecture.md)
+- [Roadmap](docs/roadmap.md)
+- [Plugin manifest draft](docs/plugin-sdk.md)
+
+## Development
+
+```sh
+pnpm build
+pnpm typecheck
+pnpm test:smoke
 pnpm dev doctor
 ```
 
-`repo search` includes lightweight metadata:
+## License
 
-```text
-category/name    language | framework | package-manager | branch | clean/dirty | last-commit-date    path
-```
-
-`repo category <name>` lists indexed repositories in an exact category, case-insensitively. Use `--limit <n>` to cap output.
-
-`repo language <name>` lists indexed repositories by detected language. Use `unknown` for repos without a detected primary language. Use `--limit <n>` to cap output.
-
-`repo framework <name>` lists indexed repositories by detected framework. Use `unknown` for repos without a detected framework. Use `--limit <n>` to cap output.
-
-`repo source <name>` lists indexed repositories by provider, such as `repo-local` or `repo-github`. Use `--limit <n>` to cap output.
-
-`repo local-only` and `repo remote-only` are shortcuts for local and GitHub provider filters.
-
-`repo duplicates` finds repository names that appear in multiple providers, such as local plus GitHub overlap.
-
-`repo compare` summarizes overlap between two providers and lists limited samples of overlapping, likely-matching, unresolved left-only, and unresolved right-only repositories. Likely matches catch name variants such as separator changes or `-main` suffixes. It defaults to `repo-local` compared with `repo-github`.
-
-Use `repo compare --json` for scripts, reports, or future automation.
-
-`repo missing-local` lists unresolved GitHub-only repositories. `repo missing-remote` lists unresolved local-only repositories.
-
-`repo clone-plan` prints a dry-run clone plan for unresolved GitHub-only repositories: repo name, source URL, and proposed local destination. Add `--commands` to print reviewable `mkdir` and `git clone` commands. It does not clone anything.
-
-`repo show <query>` prints the full indexed metadata for the first matching repository.
-
-`repo path <query>` prints only the matched repository path for shell workflows.
-
-`repo open <query>` opens the matched local path or remote URL with the system default app. Use `--dry-run` to print the target without opening it.
-
-`repo cd <query>` prints a shell-safe `cd` command for the matched local repository.
-
-`repo dirty` lists indexed repositories with local changes, sorted by changed file count.
-
-`repo stale --days <n>` lists indexed repositories whose last commit is older than the threshold.
-
-`repo summary` prints portfolio counts by category, source, language, and framework.
-
-`capsule preview` prints the generated Markdown without writing a file. `capsule create` writes the same Markdown under `.codemesh/capsules/`.
-
-`capsule list` shows generated capsules newest-first. `capsule show <filename>` prints a saved capsule.
-
-`memory add`, `memory list`, and `memory show` manage local project, decision, architecture, prompt, and summary memory under `.codemesh/memory/`.
-
-`usage add`, `usage list`, and `usage summary` track local AI usage events under `.codemesh/usage/`.
-
-`graph generate`, `graph summary`, and `graph search` manage a local graph export under `.codemesh/graph/`.
-
-`automation plan daily|weekly` prints local command plans for recurring workflows. It does not schedule anything.
-
-`doctor` checks configured local paths, the local SQLite index, the capsule output directory, `sqlite3` availability, and the read-only Obsidian policy.
-
-`plugins list` shows active first-party plugins and planned future providers. Planned plugins are registry entries only until their local-first implementation is added.
-
-`plugins validate` checks optional local plugin manifests under `.codemesh/plugins/*.json`.
-
-`scan knowledge` detects Obsidian knowledge, local repository Markdown docs, and optional local imports without writing to any source.
-
-Optional import config keys:
-
-- `notionImportPath`
-- `notebookLmImportPath`
-- `githubWikiImportPath`
-
-`scan github` indexes read-only GitHub repository metadata through the authenticated `gh` CLI.
-
-`scan gitlab` indexes read-only GitLab metadata when `gitlabGroup` is configured and `GITLAB_TOKEN` is set. `scan bitbucket` indexes read-only Bitbucket metadata when `bitbucketWorkspace` is configured and `BITBUCKET_TOKEN` is set.
-
-`dashboard generate` writes a local static dashboard to `.codemesh/dashboards/index.html` with portfolio counts, local/GitHub comparison, likely matches, usage metrics, provider overlap, recent repos, dirty repos, and plugin status.
-
-`report daily` and `report weekly` write local Markdown reports to `.codemesh/reports/`.
-
-`report release-notes` and `report changelog` generate local Markdown from recent commits in a matched repository.
-
-`report pr-summary` generates local Markdown from GitHub pull requests using the authenticated `gh` CLI.
-
-`report repo-comparison` saves the local/GitHub comparison, likely matches, and unresolved-only repositories as Markdown.
-
-`report usage-summary` saves local AI usage totals and per-agent usage as Markdown.
-
-Capsule templates:
-
-- `neutral`: portable context for any coding agent
-- `codex`: adds Codex-focused inspection, AGENTS.md, scope, and verification guidance
-- `claude`: adds Claude-focused CLAUDE.md, vault-boundary, and handoff guidance
-
-Capsules also resolve known project memory folders when present, including `_RepoMem`, `_Projects`, `_Codex/Memories`, and `_Claude/Memories`. Obsidian remains read-only.
-
-## Confirmed Local Paths
-
-```text
-Repo category root:
-/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos
-
-Obsidian vault:
-/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos/SudarshanObsidian
-
-CodeMesh repo:
-/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos/CodeMesh
-```
-
-## Design Constraints
-
-Obsidian integration is read-only for the MVP. CodeMesh must not write capsules or memory into the vault yet.
-
-The MVP uses internal plugin interfaces only:
-
-- `RepositorySourcePlugin`
-- `KnowledgeSourcePlugin`
-- `AgentPlugin`
-- `CapsuleRendererPlugin`
-
-External plugin SDK, dashboard, automation, Notion, NotebookLM, and cloud integrations are intentionally out of scope.
+MIT. See [LICENSE](LICENSE).

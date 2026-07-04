@@ -1,36 +1,37 @@
 # Future Vision Status
 
-CodeMesh is now a local-first foundation for the future vision. The implemented pieces are intentionally file-based, CLI-driven, and private-repo friendly.
+CodeMesh is now a local-first foundation for a broader AI developer workspace. The implemented pieces are intentionally file-based, CLI-driven, and private-repo friendly.
 
 ## Active
 
-- First-party plugin registry
-- Local Git repository discovery
-- Optional read-only GitHub repository discovery through `gh`
-- Optional read-only GitLab repository discovery through `GITLAB_TOKEN`
-- Optional read-only Bitbucket repository discovery through `BITBUCKET_TOKEN`
-- Obsidian read-only detection
-- Local Markdown documentation detection
-- Optional local Notion, NotebookLM, and GitHub Wiki export imports
-- Claude and Codex instruction detection
-- Local multi-agent instruction detection for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf
-- Context capsule preview/create/list/show
-- Local static dashboard generation
-- Daily and weekly Markdown reports
-- Release notes and changelog generation from local Git commits
-- Local project, decision, architecture, prompt, and summary memory
-- Local AI usage tracking
-- Usage reports and dashboard metrics
-- Local knowledge graph export, summary, search, and dashboard metrics
-- Local plugin manifest validation
-- Local automation command plans
+- First-party plugin registry.
+- Local Git repository discovery.
+- Optional read-only GitHub repository discovery through `gh`.
+- Optional read-only GitLab repository discovery through `GITLAB_TOKEN`.
+- Optional read-only Bitbucket repository discovery through `BITBUCKET_TOKEN`.
+- Obsidian read-only detection.
+- Local Markdown documentation detection.
+- Optional local Notion, NotebookLM, and GitHub Wiki export imports.
+- Claude and Codex instruction detection.
+- Local multi-agent instruction detection for Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf.
+- Context capsule preview/create/list/show.
+- Local static dashboard generation.
+- Daily and weekly Markdown reports.
+- Release notes and changelog generation from local Git commits.
+- Local project, decision, architecture, prompt, and summary memory.
+- Local AI usage tracking.
+- Usage reports and dashboard metrics.
+- Local knowledge graph export, summary, search, and dashboard metrics.
+- Local plugin manifest validation.
+- Local automation command plans.
 
 ## Planned
 
-- Live Notion, NotebookLM, and GitHub Wiki sync providers
-- Richer knowledge graph visualization
-- PR summary generation from remote provider metadata
-- External plugin code loading and SDK packaging
+- Public beta release hardening.
+- Live Notion, NotebookLM, and GitHub Wiki sync providers.
+- Richer knowledge graph visualization.
+- PR summary generation from remote provider metadata.
+- External plugin code loading and SDK packaging.
 
 ## Boundaries
 

@@ -1,85 +1,43 @@
 # Roadmap
 
-## MVP
+## Shipped
 
-- Initialize Git repo
-- TypeScript CLI
-- Config file
-- Repo category discovery
-- SQLite index
-- Obsidian structure detection, read-only
-- Claude/Codex instruction detection
-- Markdown context capsule generation
-- `doctor`
-- `repo search`
-- Basic docs
+- TypeScript CLI.
+- Local config file.
+- Category-based local repository discovery.
+- SQLite repository index.
+- Read-only Obsidian structure detection.
+- Local Markdown knowledge detection.
+- Optional local Notion, NotebookLM, and GitHub Wiki export imports.
+- Claude, Codex, Gemini CLI, OpenCode, Aider, Amp, Cursor, and Windsurf instruction detection.
+- Markdown context capsule preview/create/list/show.
+- Repository search, filtering, summaries, dirty checks, stale checks, and clone plans.
+- Optional read-only GitHub, GitLab, and Bitbucket metadata providers.
+- Local reports, static dashboard, usage tracking, memory, graph export, and automation command plans.
+- First-party plugin registry and local plugin manifest validation.
 
-## v0.2
+## Public Beta Hardening
 
-- Better language and framework detection
-- Git branch/status indexing for selected repos
-- Top-level Git repo discovery under the repo category root
-- Search output with language, framework, package manager, branch, dirty status, and last commit date
-- Repo category command for category-scoped navigation
-- Repo language command for language-scoped navigation
-- Repo framework command for framework-scoped navigation
-- Repo source command for provider-scoped navigation
-- `--limit` support for broad repo filter commands
-- Repo local-only and remote-only shortcuts
-- Repo duplicate detection across providers
-- Repo provider comparison with overlap and missing-side counts
-- Likely repo matching for local/GitHub name variants
-- JSON output for repo provider comparison
-- Missing-local and missing-remote repo shortcuts
-- Dry-run clone plan for unresolved GitHub-only repositories
-- Reviewable shell commands for clone plans
-- Repo show command for full indexed metadata
-- Repo path command for shell workflows
-- Repo open command for local path and URL navigation
-- Repo cd command for shell-safe local navigation
-- Repo dirty command for local-change triage
-- Repo stale command for age-based project review
-- Repo summary command for portfolio counts
-- Provider/source split in summaries, dashboard, and reports
-- Doctor checks for configured paths, SQLite, capsules, and Obsidian read-only policy
-- Capsule preview command
-- Capsule history list/show commands
-- Capsules include repo metadata, matching Obsidian references, and Claude/Codex instruction paths
-- Capsule templates for `neutral`, `codex`, and `claude`
-- Project memory resolver
+- Public install and configuration docs.
+- Portable default config.
+- CLI smoke checks.
+- GitHub Actions CI.
+- Security, contribution, privacy, and changelog docs.
+- Public release tag and GitHub release notes.
 
-## v0.3
+## v1.0 Candidates
 
-- First-party plugin registry and `plugins list`
-- Future vision status doc
-- Optional read-only GitHub repository provider
-- Optional read-only GitLab repository provider
-- Optional read-only Bitbucket repository provider
-- Local dashboard
-- Static dashboard generator
-- Daily and weekly Markdown report generator
-- Release notes and changelog generator
-- GitHub PR summary generator
-- Repository source comparison report generator
-- Local project/decision/architecture/prompt/summary memory commands
-- Local AI usage tracking commands
-- Usage summary report generator
-- Dashboard usage metrics
-- Local knowledge graph export, summary, and search commands
-- Dashboard knowledge graph summary
-- Optional local Notion, NotebookLM, and GitHub Wiki import providers
-- Local plugin manifest validation
-- Local automation command plans
-- Local multi-agent instruction detector
-- Local Markdown knowledge provider
-- Capsule history browser
-- Stable plugin manifest draft
-- GitHub read-only provider
+- Stable command reference.
+- Fresh-clone validation on macOS and Linux.
+- More focused tests around config, repository discovery, and capsule generation.
+- Better dashboard screenshots or terminal recordings.
+- Clear npm publishing decision.
 
-## v1.0
+## Later
 
-- Plugin SDK
-- Multi-agent launch workflows
-- Knowledge graph view
-- Daily and weekly reports
-- Release and changelog generation
+- External plugin SDK.
+- External plugin code loading with safety policy.
+- Richer knowledge graph visualization.
+- Live Notion, NotebookLM, and GitHub Wiki sync providers.
+- Multi-agent launch workflows.
+- Cross-platform Windows hardening.
