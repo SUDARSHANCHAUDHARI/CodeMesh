@@ -547,6 +547,12 @@ pnpm test:smoke
 
 See [Contributing](CONTRIBUTING.md).
 
+## Author
+
+Built and maintained by [Sudarshan Chaudhari](https://github.com/SUDARSHANCHAUDHARI).
+
+CodeMesh is part of Sudarshan's local-first developer tooling work at SudarshanTechLabs.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
