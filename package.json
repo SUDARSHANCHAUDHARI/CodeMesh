@@ -10,6 +10,7 @@
     "build": "tsc -p tsconfig.json",
     "dev": "pnpm build && node dist/cli/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:smoke": "pnpm build && sh tests/smoke/cli-smoke.sh",
     "start": "node dist/cli/index.js"
   },
   "devDependencies": {

@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 import { dirname } from "node:path";
+import { createRequire } from "node:module";
 import { CodeMeshApp } from "../core/app.js";
 import type { MemoryKind } from "../core/memory/memory-service.js";
 import type { CapsuleTemplate } from "../core/plugins/types.js";
 
+const require = createRequire(import.meta.url);
+const packageJson = require("../../package.json") as { version: string };
 const app = new CodeMeshApp();
 const args = process.argv.slice(2);
 
@@ -19,6 +22,11 @@ async function run(argv: string[]): Promise<void> {
 
   if (!command || command === "help" || command === "--help") {
     printHelp();
+    return;
+  }
+
+  if (command === "--version" || command === "version") {
+    console.log(packageJson.version);
     return;
   }
 
@@ -685,6 +693,7 @@ function printHelp(): void {
 
 Usage:
   codemesh init [--repo-root <path>] [--obsidian-vault <path>] [--codemesh-root <path>] [--github-owner <owner>]
+  codemesh --version
   codemesh plugins list
   codemesh plugins validate
   codemesh scan repos
