@@ -24,8 +24,8 @@ This checklist tracks what must change before CodeMesh is ready for a public Git
 - [x] Confirm `pnpm typecheck` passes.
 - [x] Confirm `pnpm test:smoke` passes.
 - [x] Confirm `pnpm dev doctor` passes.
-- [ ] Confirm GitHub Actions CI passes on `main`.
-- [ ] Confirm `git status -sb` is clean before tagging.
+- [x] Confirm GitHub Actions CI passes on `main`.
+- [x] Confirm `git status -sb` is clean before tagging.
 
 ## Before v1.0 Tag
 
