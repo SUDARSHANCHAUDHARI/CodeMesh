@@ -26,7 +26,9 @@ Result:
 - typecheck passed
 - smoke checks passed
 
-Linux validation is covered by GitHub Actions CI on Ubuntu:
+Linux validation still needs a manual pass before broader platform support is claimed.
+
+Recommended Linux validation commands:
 
 - `pnpm install --frozen-lockfile`
 - `pnpm build`
@@ -34,4 +36,4 @@ Linux validation is covered by GitHub Actions CI on Ubuntu:
 - `pnpm test`
 - `pnpm test:smoke`
 
-Before v1.0, repeat this validation manually on a non-CI Linux machine if broader platform support becomes a release claim.
+Before v1.0, repeat this validation manually on a Linux machine if broader platform support becomes a release claim.

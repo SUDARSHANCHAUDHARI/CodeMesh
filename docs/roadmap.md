@@ -21,7 +21,7 @@
 - Public install and configuration docs.
 - Portable default config.
 - CLI smoke checks.
-- GitHub Actions CI.
+- Local verification docs.
 - Security, contribution, privacy, and changelog docs.
 - Public release tag and GitHub release notes.
 

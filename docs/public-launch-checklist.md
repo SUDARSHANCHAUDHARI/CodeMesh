@@ -9,7 +9,7 @@ This checklist tracks what must change before CodeMesh is ready for a public Git
 - [x] Rewrite README public quickstart so Sudarshan paths are examples, not required defaults.
 - [x] Add public install, configuration, commands, and privacy docs.
 - [x] Add CLI smoke checks for `--help`, `--version`, `plugins list`, and `doctor`.
-- [x] Add GitHub Actions CI for build, typecheck, and smoke checks.
+- [x] Add local verification commands for build, typecheck, tests, smoke checks, and doctor.
 - [x] Add `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, and `CHANGELOG.md`.
 - [x] Verify no generated `.codemesh/` outputs, indexes, capsules, memory, reports, dashboards, or usage logs are tracked.
 - [x] Verify no real secrets, tokens, private keys, auth sessions, or local signing material are tracked.
@@ -24,7 +24,7 @@ This checklist tracks what must change before CodeMesh is ready for a public Git
 - [x] Confirm `pnpm typecheck` passes.
 - [x] Confirm `pnpm test:smoke` passes.
 - [x] Confirm `pnpm dev doctor` passes.
-- [x] Confirm GitHub Actions CI passes on `main`.
+- [x] Confirm local verification passes on `main`.
 - [x] Confirm `git status -sb` is clean before tagging.
 
 ## Before v1.0 Tag

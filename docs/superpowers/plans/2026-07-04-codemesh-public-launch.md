@@ -6,7 +6,7 @@
 
 **Architecture:** Keep CodeMesh as a single TypeScript CLI with a small stable core, first-party internal plugins, and local file-based outputs under `.codemesh/`. Public launch work should harden packaging, docs, tests, privacy, and examples before expanding runtime architecture.
 
-**Tech Stack:** TypeScript, Node.js 20+, pnpm, SQLite via local `sqlite3` CLI, GitHub CLI for optional GitHub metadata, GitHub Actions for CI, Markdown docs, static HTML dashboard.
+**Tech Stack:** TypeScript, Node.js 20+, pnpm, SQLite via local `sqlite3` CLI, GitHub CLI for optional GitHub metadata, Markdown docs, static HTML dashboard.
 
 ## Global Constraints
 
@@ -30,7 +30,7 @@ Public launch means:
 - A new user can install or run it locally from the repo.
 - A new user can initialize CodeMesh against their own repo root without editing source code.
 - The repo can be made public without leaking private data, local generated state, or misleading personal defaults.
-- CI proves the TypeScript CLI builds and basic commands work.
+- Local verification proves the TypeScript CLI builds and basic commands work.
 - Release notes, versioning, license, contribution boundaries, and security policy are present.
 
 Public launch does not mean:
@@ -50,8 +50,6 @@ Public launch does not mean:
 - `SECURITY.md`: vulnerability reporting and local-first privacy statement.
 - `CONTRIBUTING.md`: lightweight contribution rules for a solo-maintained public repo.
 - `CHANGELOG.md`: public release history starting at current private MVP state.
-- `.github/workflows/ci.yml`: install, build, typecheck, and smoke tests.
-- `.github/workflows/release.yml`: optional tag-driven package/archive verification.
 - `docs/public-launch-checklist.md`: human checklist for flipping the repo public.
 - `docs/install.md`: installation and first-run guide.
 - `docs/configuration.md`: config keys, path examples, and privacy notes.
@@ -200,7 +198,7 @@ node dist/cli/index.js doctor >/dev/null
 
 - [ ] Choose launch version:
   - Use `0.4.0` for public beta.
-  - Reserve `1.0.0` until install, docs, CI, and smoke usage are proven.
+  - Reserve `1.0.0` until install, docs, tests, and smoke usage are proven.
 - [ ] Set `private` according to the launch decision:
   - keep `private: true` for public GitHub-only release.
   - remove `private` only when ready to publish to npm.
@@ -274,56 +272,24 @@ node dist/cli/index.js doctor >/dev/null
 - [ ] Run `pnpm typecheck`.
 - [ ] Commit with `docs: prepare public launch documentation`.
 
-## Task 6: CI For Public Confidence
+## Task 6: Local Verification For Public Confidence
 
 **Files:**
-- Create: `.github/workflows/ci.yml`
 - Modify: `package.json`
+- Modify: `README.md`
+- Modify: `docs/install.md`
 
 **Interfaces:**
 - Consumes: build/typecheck/smoke scripts.
-- Produces: GitHub Actions status checks for every push and pull request.
+- Produces: documented local verification commands.
 
-- [ ] Create `.github/workflows/ci.yml`:
-
-```yaml
-name: CI
-
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - name: Install sqlite3
-        run: sudo apt-get update && sudo apt-get install -y sqlite3
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
-      - name: Typecheck
-        run: pnpm typecheck
-      - name: Smoke test
-        run: pnpm test:smoke
-```
-
+- [ ] Document local verification commands in README and install docs.
 - [ ] Run `pnpm build`.
 - [ ] Run `pnpm typecheck`.
+- [ ] Run `pnpm test`.
 - [ ] Run `pnpm test:smoke`.
-- [ ] Push branch and verify CI passes on GitHub.
-- [ ] Commit with `ci: add public launch checks`.
+- [ ] Run `pnpm dev doctor`.
+- [ ] Commit with `docs: document local verification`.
 
 ## Task 7: Security And Privacy Policies
 
@@ -376,7 +342,6 @@ node_modules/
 **Files:**
 - Create: `CHANGELOG.md`
 - Modify: `docs/roadmap.md`
-- Optional Create: `.github/workflows/release.yml`
 
 **Interfaces:**
 - Consumes: current git history and roadmap.
@@ -389,7 +354,7 @@ node_modules/
   - `0.1.0 - MVP`
 - [ ] For each version, list user-visible features, not every commit.
 - [ ] Add unreleased section at top.
-- [ ] Optional: create `.github/workflows/release.yml` that runs build/typecheck/smoke on tags matching `v*`.
+- [ ] Run `pnpm pack --dry-run`.
 - [ ] Run `pnpm build`.
 - [ ] Run `pnpm typecheck`.
 - [ ] Commit with `docs: add public changelog`.
@@ -434,7 +399,7 @@ pnpm dev doctor
 
 - [ ] Confirm no blockers remain in `docs/public-launch-checklist.md`.
 - [ ] Confirm GitHub default branch is `main`.
-- [ ] Confirm GitHub Actions CI is passing.
+- [ ] Confirm local verification is passing.
 - [ ] Confirm repo description:
 
 ```text
@@ -481,7 +446,7 @@ git push origin v0.4.0
 3. CLI help/version/smoke.
 4. Package metadata.
 5. Public docs.
-6. CI.
+6. Local verification.
 7. Security/privacy policies.
 8. Changelog.
 9. Public beta release candidate.
@@ -494,7 +459,7 @@ Do not call the repo public-launch-ready until all are true:
 
 - `git status -sb` is clean.
 - Local `main` equals `origin/main`.
-- GitHub Actions CI is green.
+- Local verification is green.
 - `pnpm build` passes.
 - `pnpm typecheck` passes.
 - `pnpm test:smoke` passes.
@@ -507,6 +472,6 @@ Do not call the repo public-launch-ready until all are true:
 
 ## Self-Review
 
-- Spec coverage: The plan covers packaging, docs, public config, tests, CI, privacy, security, changelog, release tagging, and public visibility.
+- Spec coverage: The plan covers packaging, docs, public config, tests, local verification, privacy, security, changelog, release tagging, and public visibility.
 - Placeholder scan: No launch task depends on TBD behavior; optional decisions are explicitly marked as optional.
 - Type consistency: Config field names match the current README and plugin/provider names.

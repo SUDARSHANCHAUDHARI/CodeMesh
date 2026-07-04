@@ -1,6 +1,5 @@
 # CodeMesh
 
-[![CI](https://github.com/SUDARSHANCHAUDHARI/CodeMesh/actions/workflows/ci.yml/badge.svg)](https://github.com/SUDARSHANCHAUDHARI/CodeMesh/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/SUDARSHANCHAUDHARI/CodeMesh?label=release)](https://github.com/SUDARSHANCHAUDHARI/CodeMesh/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js)](package.json)
@@ -451,17 +450,19 @@ pnpm dev doctor
 
 `pnpm test` runs Node's built-in test runner against compiled output. Current focused coverage includes config initialization, local repo discovery, and capsule rendering/history.
 
-## CI And Release Verification
+## Local Verification
 
-GitHub Actions run:
+Before committing or releasing, run:
 
-- install
-- build
-- typecheck
-- unit tests
-- smoke tests
+```sh
+pnpm build
+pnpm typecheck
+pnpm test
+pnpm test:smoke
+pnpm dev doctor
+```
 
-Release tags also run package preview with:
+For release packaging checks, run:
 
 ```sh
 pnpm pack --dry-run
@@ -476,7 +477,7 @@ Included in `0.4.0`:
 - multi-agent instruction detection
 - context capsule generation
 - local reports, dashboard, memory, usage, graph, and automation plans
-- public docs, CI, smoke tests, and focused unit tests
+- public docs, smoke tests, and focused unit tests
 
 Out of scope for the current public beta:
 

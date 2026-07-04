@@ -4,7 +4,7 @@ This backlog tracks non-blocking work after the `0.4.0` public beta.
 
 ## v1.0 Hardening
 
-- Repeat fresh-clone setup on a non-CI Linux machine before claiming broader platform support.
+- Repeat fresh-clone setup on a Linux machine before claiming broader platform support.
 - Add more provider tests around GitHub, GitLab, Bitbucket, and local imports.
 - Add screenshots or terminal recordings after the command docs settle.
 - Keep npm publishing source-run only for `0.4.x`; revisit using `docs/decisions/npm-publishing.md`.
