@@ -14,9 +14,14 @@ export class ConfigManager {
     }
   }
 
-  async init(): Promise<string> {
+  async init(overrides: Partial<CodeMeshConfig> = {}): Promise<string> {
+    const config: CodeMeshConfig = { ...DEFAULT_CONFIG, ...definedValues(overrides) };
     await mkdir(dirname(CONFIG_PATH), { recursive: true });
-    await writeFile(CONFIG_PATH, `${JSON.stringify(DEFAULT_CONFIG, null, 2)}\n`, "utf8");
+    await writeFile(CONFIG_PATH, `${JSON.stringify(config, null, 2)}\n`, "utf8");
     return CONFIG_PATH;
   }
+}
+
+function definedValues<T extends object>(input: Partial<T>): Partial<T> {
+  return Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined)) as Partial<T>;
 }

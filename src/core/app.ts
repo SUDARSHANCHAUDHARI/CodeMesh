@@ -26,6 +26,7 @@ import { PluginRegistry } from "./plugins/plugin-registry.js";
 import { ReportService, type ReportKind } from "./reports/report-service.js";
 import { UsageService, type UsageEventInput } from "./usage/usage-service.js";
 import type { CapsuleTemplate } from "./plugins/types.js";
+import type { CodeMeshConfig } from "./config/types.js";
 
 export interface RepoClonePlanItem {
   name: string;
@@ -45,8 +46,8 @@ export class CodeMeshApp {
   private readonly pluginRegistry = new PluginRegistry();
   private readonly agentPlugins = [new ClaudePlugin(), new CodexPlugin(), new LocalAgentPlugin()];
 
-  async init(): Promise<string> {
-    return this.configManager.init();
+  async init(overrides: Partial<CodeMeshConfig> = {}): Promise<string> {
+    return this.configManager.init(overrides);
   }
 
   async listPlugins() {

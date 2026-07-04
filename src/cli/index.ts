@@ -23,7 +23,13 @@ async function run(argv: string[]): Promise<void> {
   }
 
   if (command === "init") {
-    const configPath = await app.init();
+    const initArgs = subcommand ? [subcommand, ...rest] : rest;
+    const configPath = await app.init({
+      repoCategoriesRoot: readFlag(initArgs, "--repo-root"),
+      obsidianVaultPath: readFlag(initArgs, "--obsidian-vault"),
+      codemeshRepoPath: readFlag(initArgs, "--codemesh-root"),
+      githubOwner: readFlag(initArgs, "--github-owner")
+    });
     console.log(`Created config: ${configPath}`);
     return;
   }
@@ -678,7 +684,7 @@ function printHelp(): void {
   console.log(`CodeMesh
 
 Usage:
-  codemesh init
+  codemesh init [--repo-root <path>] [--obsidian-vault <path>] [--codemesh-root <path>] [--github-owner <owner>]
   codemesh plugins list
   codemesh plugins validate
   codemesh scan repos

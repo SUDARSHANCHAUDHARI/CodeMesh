@@ -2,7 +2,5 @@
   "repoCategoriesRoot": "/Users/you/code",
   "obsidianVaultPath": "/Users/you/notes/ObsidianVault",
   "codemeshRepoPath": "/Users/you/code/CodeMesh",
-  "githubOwner": "your-github-user",
-  "ignoredCategoryNames": [".agents", ".claude", ".git", "node_modules"],
-  "maxGitStatusRepos": 25
+  "githubOwner": "your-github-user"
 }

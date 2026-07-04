@@ -1,3 +1,5 @@
+import { join } from "node:path";
+
 export interface CodeMeshConfig {
   repoCategoriesRoot: string;
   obsidianVaultPath: string;
@@ -13,12 +15,14 @@ export interface CodeMeshConfig {
   maxGitStatusRepos: number;
 }
 
+const currentWorkspace = process.cwd();
+
 export const DEFAULT_CONFIG: CodeMeshConfig = {
-  repoCategoriesRoot: "/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos",
-  obsidianVaultPath: "/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos/SudarshanObsidian",
-  codemeshRepoPath: "/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos/CodeMesh",
-  githubOwner: "SUDARSHANCHAUDHARI",
+  repoCategoriesRoot: currentWorkspace,
+  obsidianVaultPath: join(currentWorkspace, "ObsidianVault"),
+  codemeshRepoPath: currentWorkspace,
+  githubOwner: "",
   gitlabBaseUrl: "https://gitlab.com",
-  ignoredCategoryNames: [".agents", ".claude", ".git", "SudarshanObsidian"],
+  ignoredCategoryNames: [".agents", ".claude", ".git", "node_modules"],
   maxGitStatusRepos: 25
 };
