@@ -4,7 +4,7 @@ All notable user-facing changes are documented here.
 
 ## Unreleased
 
-- No unreleased changes yet.
+- Added post-launch backlog after the `0.4.0` public beta.
 
 ## 0.4.0 - Public Beta - 2026-07-04
 
