@@ -11,8 +11,8 @@ https://github.com/SUDARSHANCHAUDHARI/CodeMesh.git
 Commands:
 
 ```sh
-git clone https://github.com/SUDARSHANCHAUDHARI/CodeMesh.git /private/tmp/codemesh-public-clone-verify
-cd /private/tmp/codemesh-public-clone-verify
+git clone https://github.com/SUDARSHANCHAUDHARI/CodeMesh.git /tmp/codemesh-public-clone-verify
+cd /tmp/codemesh-public-clone-verify
 pnpm install --frozen-lockfile
 pnpm build
 pnpm typecheck

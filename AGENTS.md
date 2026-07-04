@@ -14,7 +14,7 @@ CodeMesh is a local-first TypeScript CLI for indexing Sudarshan's repository cat
 
 ## Boundaries
 
-- Do not write to `/Users/screencloudsudarshan/SUDARSHAN_CODE/sudarshan_repos/SudarshanObsidian` unless explicitly approved.
+- Do not write to the configured Obsidian vault path unless explicitly approved.
 - Do not add dashboard, automation, Notion, NotebookLM, cloud sync, or external plugin work unless explicitly requested.
 - Do not commit local config, generated capsules, SQLite indexes, secrets, `.env*`, signing material, or auth/session files.
 - Stage files by explicit path only.

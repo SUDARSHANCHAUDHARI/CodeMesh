@@ -88,7 +88,7 @@ Public launch does not mean:
 - Produces: `docs/public-launch-checklist.md`, the source of truth for launch blockers.
 
 - [ ] Run `git status -sb`.
-- [ ] Run `rg -n "screencloudsudarshan|SUDARSHAN_CODE|SudarshanObsidian|sunny.sudarshan|sudarshantechlabs|GITLAB_TOKEN|BITBUCKET_TOKEN|token|secret|password|private key|BEGIN " .`.
+- [ ] Run `rg -n "GITLAB_TOKEN|BITBUCKET_TOKEN|token|secret|password|private key|BEGIN |/Users/[^/]+/" .`.
 - [ ] Run `git ls-files`.
 - [ ] Confirm generated folders are not tracked: `.codemesh/`, `dist/`, `node_modules/`, `graphify-out/`.
 - [ ] Create `docs/public-launch-checklist.md` with sections:
@@ -125,7 +125,7 @@ Public launch does not mean:
   - `notebookLmImportPath`
   - `githubWikiImportPath`
 - [ ] Ensure `codemesh init` can create a config using the current working directory and user-provided paths.
-- [ ] Ensure no generated public config hardcodes `/Users/screencloudsudarshan/...` unless it is in example documentation labeled as Sudarshan's local setup.
+- [ ] Ensure no generated public config hardcodes maintainer-local absolute paths except clearly fake examples such as `/Users/you/...`.
 - [ ] Create `examples/basic/codemesh.config.example.json` with placeholder paths:
 
 ```json
