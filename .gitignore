@@ -11,3 +11,6 @@ dist/
 *.p12
 *.mobileprovision
 *.xcuserstate
+
+# changeguard scan output
+.changeguard/
